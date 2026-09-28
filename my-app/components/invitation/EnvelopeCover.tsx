@@ -126,37 +126,39 @@ export function EnvelopeCover({
       >
         <div
           ref={floralsRef}
-          className="pointer-events-none absolute inset-0 z-[1] overflow-hidden rounded-2xl"
+          className="pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-2xl"
           aria-hidden
         >
-          <div className="absolute -left-3 -top-2 h-[11rem] w-[11rem] md:h-[12rem] md:w-[12rem] opacity-100 saturate-[1.12] contrast-[1.08]">
+          <div className="absolute -left-5 -top-4 h-[9rem] w-[9rem] md:h-[11rem] md:w-[11rem] opacity-100 saturate-[1.12] contrast-[1.08] [mask-image:radial-gradient(ellipse_90%_90%_at_0%_0%,black_32%,transparent_68%)] [-webkit-mask-image:radial-gradient(ellipse_90%_90%_at_0%_0%,black_32%,transparent_68%)]">
             <Image
               src="/themes/hoa.webp"
               alt=""
               fill
               className="object-contain object-left-top drop-shadow-[0_2px_8px_rgba(64,74,29,0.12)]"
-              sizes="192px"
+              sizes="176px"
               priority
             />
           </div>
-          <div className="absolute -right-2 -bottom-1 h-[9rem] w-[9rem] md:h-[10rem] md:w-[10rem] scale-x-[-1] opacity-90 saturate-[1.08] contrast-[1.05] [mask-image:linear-gradient(to_top,black_55%,transparent_92%)]">
+          <div className="absolute -right-3 -bottom-2 h-[8rem] w-[8rem] md:h-[9rem] md:w-[9rem] scale-x-[-1] opacity-90 saturate-[1.08] contrast-[1.05] [mask-image:radial-gradient(ellipse_85%_85%_at_100%_100%,black_40%,transparent_75%)] [-webkit-mask-image:radial-gradient(ellipse_85%_85%_at_100%_100%,black_40%,transparent_75%)]">
             <Image
               src="/themes/hoa.webp"
               alt=""
               fill
               className="object-contain object-right-bottom drop-shadow-[0_2px_8px_rgba(64,74,29,0.12)]"
-              sizes="208px"
+              sizes="192px"
               priority
             />
           </div>
         </div>
 
-        <div className="relative z-10 flex w-full flex-col items-center pb-1 before:pointer-events-none before:absolute before:inset-x-0 before:bottom-0 before:top-[38%] before:-z-10 before:rounded-b-2xl before:bg-gradient-to-b before:from-transparent before:via-[#FFFAF7]/80 before:to-[#FFFAF7]">
+        <div className="relative z-20 flex w-full flex-col items-center pb-1 before:pointer-events-none before:absolute before:inset-x-0 before:bottom-0 before:top-[38%] before:-z-10 before:rounded-b-2xl before:bg-gradient-to-b before:from-transparent before:via-[#FFFAF7]/80 before:to-[#FFFAF7] after:pointer-events-none after:absolute after:inset-x-0 after:top-0 after:h-[52%] after:-z-10 after:rounded-t-2xl after:bg-gradient-to-b after:from-[#FFFAF7] after:via-[#FFFAF7]/95 after:to-transparent">
           <div className="mb-4 flex h-9 w-9 items-center justify-center rounded-full bg-[#404A1D] text-[11px] text-white">
             ♥
           </div>
 
-          <h1 className={type.cover.name}>
+          <h1
+            className={`${type.cover.name} [text-shadow:0_1px_0_rgba(255,250,247,0.95),0_0_10px_rgba(255,250,247,0.75)]`}
+          >
             <span className="block">{groomShort}</span>
             <span className={`my-0.5 block ${type.cover.amp}`}>&</span>
             <span className="block">{brideShort}</span>

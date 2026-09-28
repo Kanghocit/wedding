@@ -38,7 +38,7 @@ export const type = {
     name: `${script} text-[1.75rem] md:text-[2rem] leading-tight font-normal text-[#404A1D]`,
     amp: `${script} text-2xl md:text-[1.75rem] text-[#404A1D]/75 leading-none`,
     date: `${garamond} text-[15px] md:text-base text-[#404A1D]/85`,
-    invite: `${garamond} text-sm md:text-[15px] text-[#404A1D]/55 italic`,
+    invite: `${garamond} text-sm md:text-[15px] text-[#404A1D]/70 italic`,
     button: `${montserrat} text-sm font-medium tracking-[0.08em]`,
   },
   sectionSubheading: `${baskerville} text-xs md:text-base tracking-[0.08em] uppercase text-[#404A1D]`,
