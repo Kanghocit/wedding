@@ -122,65 +122,74 @@ export function EnvelopeCover({
 
       <div
         ref={cardRef}
-        className="relative z-10 w-full max-w-[min(100%,20.5rem)] md:max-w-[22rem] rounded-2xl bg-[#FFFAF7] px-7 pt-9 pb-8 md:px-9 md:pt-10 md:pb-9 shadow-[0_18px_48px_rgba(0,0,0,0.22)] text-center text-[#404A1D] overflow-visible"
+        className="relative z-10 w-full max-w-[min(100%,20.5rem)] md:max-w-[22rem] overflow-visible rounded-[1.35rem] bg-[#FFFAF7] px-7 pt-9 pb-8 text-center text-[#404A1D] shadow-[0_22px_56px_rgba(0,0,0,0.26),0_0_0_1px_rgba(64,74,29,0.07)] ring-1 ring-inset ring-white/50 md:px-9 md:pt-10 md:pb-9"
       >
         <div
           ref={floralsRef}
           className="pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-2xl"
           aria-hidden
         >
-          <div className="absolute -left-5 -top-4 h-[9rem] w-[9rem] md:h-[11rem] md:w-[11rem] opacity-100 saturate-[1.12] contrast-[1.08] [mask-image:radial-gradient(ellipse_90%_90%_at_0%_0%,black_32%,transparent_68%)] [-webkit-mask-image:radial-gradient(ellipse_90%_90%_at_0%_0%,black_32%,transparent_68%)]">
+          <div className="absolute -left-3 -top-2 h-[11rem] w-[11rem] md:h-[12rem] md:w-[12rem] opacity-100 saturate-[1.12] contrast-[1.08]">
             <Image
               src="/themes/hoa.webp"
               alt=""
               fill
               className="object-contain object-left-top drop-shadow-[0_2px_8px_rgba(64,74,29,0.12)]"
-              sizes="176px"
+              sizes="192px"
               priority
             />
           </div>
-          <div className="absolute -right-3 -bottom-2 h-[8rem] w-[8rem] md:h-[9rem] md:w-[9rem] scale-x-[-1] opacity-90 saturate-[1.08] contrast-[1.05] [mask-image:radial-gradient(ellipse_85%_85%_at_100%_100%,black_40%,transparent_75%)] [-webkit-mask-image:radial-gradient(ellipse_85%_85%_at_100%_100%,black_40%,transparent_75%)]">
+          <div className="absolute -right-2 -bottom-1 h-[9rem] w-[9rem] scale-x-[-1] opacity-95 saturate-[1.08] contrast-[1.05] [mask-image:linear-gradient(to_top,black_50%,transparent_88%)] md:h-[10rem] md:w-[10rem] [-webkit-mask-image:linear-gradient(to_top,black_50%,transparent_88%)]">
             <Image
               src="/themes/hoa.webp"
               alt=""
               fill
               className="object-contain object-right-bottom drop-shadow-[0_2px_8px_rgba(64,74,29,0.12)]"
-              sizes="192px"
+              sizes="208px"
               priority
             />
           </div>
         </div>
 
-        <div className="relative z-20 flex w-full flex-col items-center pb-1 before:pointer-events-none before:absolute before:inset-x-0 before:bottom-0 before:top-[38%] before:-z-10 before:rounded-b-2xl before:bg-gradient-to-b before:from-transparent before:via-[#FFFAF7]/80 before:to-[#FFFAF7] after:pointer-events-none after:absolute after:inset-x-0 after:top-0 after:h-[52%] after:-z-10 after:rounded-t-2xl after:bg-gradient-to-b after:from-[#FFFAF7] after:via-[#FFFAF7]/95 after:to-transparent">
-          <div className="mb-4 flex h-9 w-9 items-center justify-center rounded-full bg-[#404A1D] text-[11px] text-white">
+        <div className="relative z-20 flex w-full flex-col items-center pb-1 before:pointer-events-none before:absolute before:inset-x-0 before:bottom-0 before:top-[42%] before:-z-10 before:rounded-b-[1.35rem] before:bg-gradient-to-b before:from-transparent before:via-[#FFFAF7]/70 before:to-[#FFFAF7]">
+          <div
+            className="pointer-events-none absolute left-1/2 top-[3.25rem] -z-10 h-[10.5rem] w-[min(100%,14.5rem)] -translate-x-1/2 rounded-[2rem] bg-[radial-gradient(ellipse_at_center,#FFFAF7_0%,rgba(255,250,247,0.88)_42%,transparent_72%)]"
+            aria-hidden
+          />
+
+          <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-full bg-[#404A1D] text-[12px] text-white shadow-[0_4px_14px_rgba(64,74,29,0.28)] ring-2 ring-[#FFFAF7]">
             ♥
           </div>
 
-          <h1
-            className={`${type.cover.name} [text-shadow:0_1px_0_rgba(255,250,247,0.95),0_0_10px_rgba(255,250,247,0.75)]`}
-          >
-            <span className="block">{groomShort}</span>
-            <span className={`my-0.5 block ${type.cover.amp}`}>&</span>
-            <span className="block">{brideShort}</span>
-          </h1>
+          <div className="relative w-full max-w-[15rem] px-1">
+            <h1
+              className={`${type.cover.name} [text-shadow:0_1px_0_rgba(255,250,247,0.98),0_2px_12px_rgba(255,250,247,0.65)]`}
+            >
+              <span className="block">{groomShort}</span>
+              <span className={`my-1 block ${type.cover.amp}`}>&</span>
+              <span className="block">{brideShort}</span>
+            </h1>
+          </div>
 
           <div
-            className="my-4 flex w-[min(100%,10rem)] items-center gap-2 opacity-35"
+            className="my-5 flex w-[min(100%,11rem)] items-center gap-2.5"
             aria-hidden
           >
-            <span className="h-px flex-1 bg-[#404A1D]" />
-            <span className="text-[8px] leading-none">♦</span>
-            <span className="h-px flex-1 bg-[#404A1D]" />
+            <span className="h-px flex-1 bg-gradient-to-r from-transparent via-[#C4A57455] to-[#404A1D]/25" />
+            <span className="text-[9px] leading-none text-[#404A1D]/45">♦</span>
+            <span className="h-px flex-1 bg-gradient-to-l from-transparent via-[#C4A57455] to-[#404A1D]/25" />
           </div>
 
           <p className={type.cover.date}>{formatDisplayDate(weddingDate)}</p>
 
-          <p className={`mt-5 ${type.cover.invite}`}>Thân Mời</p>
+          <p className={`mt-4 tracking-[0.06em] ${type.cover.invite}`}>
+            Thân Mời
+          </p>
 
           <button
             type="button"
             onClick={handleOpen}
-            className={`mt-7 rounded-full bg-[#404A1D] px-11 py-2.5 text-white shadow-[0_6px_20px_rgba(64,74,29,0.35)] hover:brightness-105 active:scale-[0.98] transition-[transform,filter] ${type.cover.button}`}
+            className={`mt-8 rounded-full bg-[#404A1D] px-12 py-3 text-white shadow-[0_8px_24px_rgba(64,74,29,0.38)] ring-1 ring-white/10 hover:brightness-105 active:scale-[0.98] transition-[transform,filter] ${type.cover.button}`}
           >
             Mở thiệp
           </button>

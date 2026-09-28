@@ -6,7 +6,7 @@ import {
   resolveCeremonyTime,
   resolvePreEvent,
 } from "@/lib/config";
-import { googleCalendarUrl } from "@/lib/date-utils";
+import { ceremonyTargetMs, googleCalendarUrl } from "@/lib/date-utils";
 import { colors, layout, type } from "@/lib/theme";
 import type { WishEntry } from "@/lib/types";
 import { CeremonySection } from "./invitation/CeremonySection";
@@ -21,6 +21,7 @@ import { MusicFab } from "./invitation/MusicFab";
 import { PhotoLightbox } from "./invitation/PhotoLightbox";
 import { RsvpModal } from "./invitation/RsvpModal";
 import { ScrollReveal } from "./invitation/ScrollReveal";
+import { WeddingCountdown } from "./invitation/WeddingCountdown";
 import { useIdleAutoScroll } from "./invitation/useIdleAutoScroll";
 import { useScrollParallax } from "./invitation/useScrollParallax";
 import { useScrollReveal } from "./invitation/useScrollReveal";
@@ -35,11 +36,7 @@ type Props = {
   partySide?: PartySide;
 };
 
-export function InvitationExperience({
-  config,
-  guestName,
-  partySide,
-}: Props) {
+export function InvitationExperience({ config, guestName, partySide }: Props) {
   const scrollRootRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
   const userGestureAtRef = useRef(0);
@@ -87,6 +84,11 @@ export function InvitationExperience({
   const ceremonyTime = useMemo(
     () => resolveCeremonyTime(config, partySide),
     [config, partySide],
+  );
+
+  const ceremonyCountdownTargetMs = useMemo(
+    () => ceremonyTargetMs(config.weddingDate, ceremonyTime, config.timezone),
+    [config.weddingDate, config.timezone, ceremonyTime],
   );
 
   const ceremonyLocation = useMemo(() => {
@@ -259,98 +261,101 @@ export function InvitationExperience({
             style={{ backgroundColor: colors.cream, color: colors.olive }}
             data-testid="mai-lan-white-template"
           >
-          <FloralLayer
-            className="top-0 pointer-events-none overflow-hidden"
-            style={{ right: "50%" }}
-            flip
-            parallaxY={parallaxA}
-            opacity={0.5}
-          />
-
-          <HeroHeader
-            groomShort={config.groomShortName}
-            brideShort={config.brideShortName}
-          />
-
-          <section
-            className={`relative flex flex-col ${layout.sectionGap} ${layout.sectionPadX} pt-6 md:pt-28 pb-14 md:pb-20 z-10`}
-          >
             <FloralLayer
-              className="pointer-events-none top-[22%]"
-              style={{ right: "42%" }}
-              opacity={0.35}
+              className="top-0 pointer-events-none overflow-hidden"
+              style={{ right: "50%" }}
               flip
-              rotate={-45}
-              extraTransform="translateY(-50%)"
-              parallaxY={parallaxB}
-            />
-            <FloralLayer
-              className="pointer-events-none overflow-hidden -top-[50px] md:-top-[100px] lg:-top-[113px]"
-              style={{ left: "50%" }}
-              extraTransform="scaleY(-1)"
-              parallaxY={parallaxA * 0.5}
-              opacity={0.3}
+              parallaxY={parallaxA}
+              opacity={0.5}
             />
 
-            <CeremonySection
-              {...config}
+            <HeroHeader
+              groomShort={config.groomShortName}
+              brideShort={config.brideShortName}
+            />
+
+            <section
+              className={`relative flex flex-col ${layout.sectionGap} ${layout.sectionPadX} pt-6 md:pt-28 pb-14 md:pb-20 z-10`}
+            >
+              <FloralLayer
+                className="pointer-events-none top-[22%]"
+                style={{ right: "42%" }}
+                opacity={0.35}
+                flip
+                rotate={-45}
+                extraTransform="translateY(-50%)"
+                parallaxY={parallaxB}
+              />
+              <FloralLayer
+                className="pointer-events-none overflow-hidden -top-[50px] md:-top-[100px] lg:-top-[113px]"
+                style={{ left: "50%" }}
+                extraTransform="scaleY(-1)"
+                parallaxY={parallaxA * 0.5}
+                opacity={0.3}
+              />
+
+              <CeremonySection
+                {...config}
+                partySide={partySide}
+                preEvent={preEvent}
+                ceremonyTime={ceremonyTime}
+                calendarLink={calendarLink}
+                preEventCalendarLink={preEventCalendarLink}
+                onRsvp={() => setRsvpOpen(true)}
+              />
+
+              {!coverMounted ? (
+                <ScrollReveal className="relative z-20 -mx-2 md:-mx-4 overflow-visible w-[calc(100%+1rem)] md:w-[calc(100%+2rem)] max-w-none">
+                  <GalleryCards
+                    photos={photos}
+                    invitationOpen
+                    onOpenLightbox={(i) => {
+                      setPhotoIndex(i);
+                      setLightbox(true);
+                    }}
+                  />
+                </ScrollReveal>
+              ) : null}
+            </section>
+
+            <PartyVenuesSection
               partySide={partySide}
-              preEvent={preEvent}
-              ceremonyTime={ceremonyTime}
-              calendarLink={calendarLink}
-              preEventCalendarLink={preEventCalendarLink}
-              onRsvp={() => setRsvpOpen(true)}
+              groom={{
+                label: config.groomPartyLabel,
+                address: config.groomPartyAddress,
+              }}
+              bride={{
+                label: config.bridePartyLabel,
+                address: config.bridePartyAddress,
+              }}
             />
 
-            {!coverMounted ? (
-              <ScrollReveal className="relative z-20 -mx-2 md:-mx-4 overflow-visible w-[calc(100%+1rem)] md:w-[calc(100%+2rem)] max-w-none">
-                <GalleryCards
-                  photos={photos}
-                  invitationOpen
-                  onOpenLightbox={(i) => {
-                    setPhotoIndex(i);
-                    setLightbox(true);
-                  }}
-                />
-              </ScrollReveal>
-            ) : null}
-          </section>
+            <GuestbookSection
+              wishes={wishes}
+              wishName={wishName}
+              wishMessage={wishMessage}
+              submitting={submitting}
+              onNameChange={setWishName}
+              onMessageChange={setWishMessage}
+              onSuggest={fillSuggestion}
+              onSubmit={() => void submitWish()}
+              formatTime={formatTime}
+            />
 
-          <PartyVenuesSection
-            partySide={partySide}
-            groom={{
-              label: config.groomPartyLabel,
-              address: config.groomPartyAddress,
-            }}
-            bride={{
-              label: config.bridePartyLabel,
-              address: config.bridePartyAddress,
-            }}
-          />
+            <GiftEnvelopes onOpen={() => setGiftOpen(true)} />
 
-          <GuestbookSection
-            wishes={wishes}
-            wishName={wishName}
-            wishMessage={wishMessage}
-            submitting={submitting}
-            onNameChange={setWishName}
-            onMessageChange={setWishMessage}
-            onSuggest={fillSuggestion}
-            onSubmit={() => void submitWish()}
-            formatTime={formatTime}
-          />
+            <ScrollReveal className="relative z-10 py-8 md:py-10">
+              <WeddingCountdown targetMs={ceremonyCountdownTargetMs} />
+            </ScrollReveal>
 
-          <GiftEnvelopes onOpen={() => setGiftOpen(true)} />
-
-          <ScrollReveal
-            as="footer"
-            className={`relative flex flex-col items-center ${layout.sectionPadWide} pb-16 md:pb-20 text-center z-10`}
-          >
-            <p className={`${type.footerNote} max-w-md px-4`}>
-              {config.footerMessage}
-            </p>
-          </ScrollReveal>
-
+            <ScrollReveal
+              as="footer"
+              className={`relative flex flex-col items-center ${layout.sectionPadWide} pb-16 md:pb-20 text-center z-10`}
+            >
+              <p className={`${type.footerNote} max-w-md px-4`}>
+                {config.footerMessage}
+              </p>
+            </ScrollReveal>
           </div>
         </div>
       </div>

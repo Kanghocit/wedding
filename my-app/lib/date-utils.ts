@@ -106,6 +106,54 @@ export function buildMonthGrid(
   return cells;
 }
 
+const VIETNAM_TZ_ALIASES = new Set(["Asia/Saigon", "Asia/Ho_Chi_Minh"]);
+
+function utcOffsetHoursForTimezone(timezone: string): number {
+  if (VIETNAM_TZ_ALIASES.has(timezone)) return 7;
+  return 7;
+}
+
+/** UTC epoch for ceremony start (same +7 convention as googleCalendarUrl). */
+export function ceremonyTargetMs(
+  isoDate: string,
+  startTime: string,
+  timezone: string,
+): number {
+  const [sh, sm = 0] = startTime.split(":").map(Number);
+  const d = parseWeddingDate(isoDate);
+  const offset = utcOffsetHoursForTimezone(timezone);
+  return Date.UTC(
+    d.getFullYear(),
+    d.getMonth(),
+    d.getDate(),
+    sh - offset,
+    sm,
+    0,
+    0,
+  );
+}
+
+export type CountdownParts = {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+};
+
+export function splitCountdown(remainingMs: number): CountdownParts {
+  const ms = Math.max(0, remainingMs);
+  const totalSeconds = Math.floor(ms / 1000);
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  return { days, hours, minutes, seconds };
+}
+
+export function padCountdownUnit(n: number): string {
+  return String(n).padStart(2, "0");
+}
+
 export function googleCalendarUrl(config: {
   title: string;
   isoDate: string;
