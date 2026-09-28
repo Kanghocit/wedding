@@ -1,26 +1,147 @@
 @import "tailwindcss";
 
 :root {
+  --cream: #fffaf7;
+  --olive: #404a1d;
+  --olive-muted: rgba(64, 74, 29, 0.12);
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #2a2a28;
+  --cover-olive-from: #3d4a1c;
+  --cover-olive-to: #2a3314;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-display: var(--font-nautigal);
+  --font-serif: var(--font-garamond);
+  --font-heading: var(--font-baskerville);
+  --font-ui: var(--font-montserrat);
 }
 
 body {
-  background: var(--background);
+  background: #fff;
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+}
+
+@keyframes petal-fall {
+  0% {
+    transform: translateY(-8vh) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.65;
+  }
+  50% {
+    transform: translateY(52vh) translateX(14px) rotate(180deg);
+    opacity: 0.55;
+  }
+  100% {
+    transform: translateY(115vh) translateX(-10px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.petal {
+  animation: petal-fall linear infinite;
+  pointer-events: none;
+}
+
+@keyframes cover-exit {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+}
+
+.cover-exiting {
+  animation: cover-exit 0.65s ease forwards;
+}
+
+@keyframes cover-card-in {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.cover-card-enter {
+  animation: cover-card-in 0.55s ease forwards;
+}
+
+@keyframes sparkle {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+.sparkle-dot {
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+@keyframes music-bar {
+  0%,
+  100% {
+    transform: scaleY(0.35);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+.music-bar {
+  transform-origin: bottom;
+  animation: music-bar 0.8s ease-in-out infinite;
+}
+
+.music-bar:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.music-bar:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.music-bar:nth-child(4) {
+  animation-delay: 0.45s;
+}
+
+.gallery-snap {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.gallery-snap > * {
+  scroll-snap-align: center;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: var(--olive-muted);
+  border-radius: 4px;
+}
+
+.modal-sheet {
+  border-radius: 1rem 1rem 0 0;
+}
+@media (min-width: 640px) {
+  .modal-sheet {
+    border-radius: 1rem;
+  }
 }

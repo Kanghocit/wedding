@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 614" fill="none">
+  <rect x="28" y="200" width="364" height="380" rx="4" fill="#FFFAF7" stroke="#404A1D" stroke-width="1"/>
+  <path d="M28 200 H210 V340 H28 Z" fill="#404A1D" opacity="0.92"/>
+  <path d="M392 200 H210 V340 H392 Z" fill="#404A1D" opacity="0.92"/>
+  <path d="M28 200 L210 340 L392 200" stroke="#404A1D" stroke-width="0.8" fill="none"/>
+  <polygon points="210,198 205,212 215,212" fill="#404A1D"/>
+  <rect x="206" y="188" width="8" height="12" fill="#404A1D" opacity="0.5"/>
+  <g transform="translate(248 420) scale(0.62)">
+    <ellipse cx="70" cy="75" rx="52" ry="48" fill="#faf7f2" stroke="#c8c0b4" stroke-width="1"/>
+    <ellipse cx="45" cy="95" rx="32" ry="16" fill="#9aab88" opacity="0.5"/>
+    <ellipse cx="95" cy="88" rx="28" ry="14" fill="#9aab88" opacity="0.45"/>
+    <ellipse cx="68" cy="68" rx="18" ry="16" fill="#fffdf9"/>
+    <circle cx="70" cy="72" r="10" fill="#ebe4d8"/>
+    <path d="M30 110 Q70 90 110 105" stroke="#8a9a78" stroke-width="2" fill="none" opacity="0.5"/>
+  </g>
+  <path d="M28 580 L210 450 L392 580" fill="#FFFAF7" stroke="#404A1D" stroke-width="0.6"/>
+</svg>
