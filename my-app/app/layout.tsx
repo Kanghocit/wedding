@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
 import {
   EB_Garamond,
+  Ephesis,
   Libre_Baskerville,
   Montserrat,
-  The_Nautigal,
 } from "next/font/google";
 import "./globals.css";
 import { getWeddingConfig } from "@/lib/config";
 
-const nautigal = The_Nautigal({
+const script = Ephesis({
   weight: "400",
   subsets: ["latin", "vietnamese"],
-  variable: "--font-nautigal",
+  variable: "--font-script",
 });
 
 const garamond = EB_Garamond({
@@ -43,9 +43,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="vi"
-      className={`${nautigal.variable} ${garamond.variable} ${baskerville.variable} ${montserrat.variable} h-full antialiased`}
+      className={`${script.variable} ${garamond.variable} ${baskerville.variable} ${montserrat.variable} min-h-full antialiased`}
     >
-      <body className="min-h-full">{children}</body>
+      <body className="min-h-full overflow-x-clip">{children}</body>
     </html>
   );
 }

@@ -77,20 +77,31 @@ export function formatLunarLine(isoDate: string): string {
 export type CalendarCell = {
   day: number | null;
   isWeddingDay: boolean;
+  isSecondaryDay: boolean;
 };
 
-export function buildMonthGrid(isoDate: string): CalendarCell[] {
+export function buildMonthGrid(
+  isoDate: string,
+  secondaryHighlightDays: number[] = [],
+): CalendarCell[] {
   const { year, month, day: weddingDay } = getDayMonthYear(isoDate);
   const first = new Date(year, month - 1, 1);
   const daysInMonth = new Date(year, month, 0).getDate();
   const startOffset = (first.getDay() + 6) % 7;
+  const secondary = new Set(
+    secondaryHighlightDays.filter((d) => d >= 1 && d <= daysInMonth),
+  );
 
   const cells: CalendarCell[] = [];
   for (let i = 0; i < startOffset; i++) {
-    cells.push({ day: null, isWeddingDay: false });
+    cells.push({ day: null, isWeddingDay: false, isSecondaryDay: false });
   }
   for (let d = 1; d <= daysInMonth; d++) {
-    cells.push({ day: d, isWeddingDay: d === weddingDay });
+    cells.push({
+      day: d,
+      isWeddingDay: d === weddingDay,
+      isSecondaryDay: d !== weddingDay && secondary.has(d),
+    });
   }
   return cells;
 }

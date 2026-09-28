@@ -2,6 +2,7 @@
 
 import type { WishEntry } from "@/lib/types";
 import { headingClassName, type } from "@/lib/theme";
+import { ScrollReveal } from "./ScrollReveal";
 
 type Props = {
   wishes: WishEntry[];
@@ -30,10 +31,12 @@ export function GuestbookSection({
 }: Props) {
   return (
     <section className="relative px-6 md:px-10 pt-6 md:pt-10 pb-8 md:pb-10 z-10">
-      <h2 className={`${headingClassName()} mb-6 md:mb-8`}>SỔ LƯU BÚT</h2>
+      <ScrollReveal as="h2" className={`${headingClassName()} mb-6 md:mb-8`}>
+        SỔ LƯU BÚT
+      </ScrollReveal>
 
       <div className="mx-auto max-w-full md:max-w-[560px]">
-        <div className="rounded-[1.25rem] bg-white px-5 py-5 md:px-6 md:py-6 shadow-[0_10px_40px_rgba(64,74,29,0.1)]">
+        <ScrollReveal delayMs={80} className="rounded-[1.25rem] bg-white px-5 py-5 md:px-6 md:py-6 shadow-[0_10px_40px_rgba(64,74,29,0.1)]">
           <div className="space-y-3 md:space-y-4">
             <input
               required
@@ -70,9 +73,12 @@ export function GuestbookSection({
               GỬI LỜI CHÚC
             </button>
           </div>
-        </div>
+        </ScrollReveal>
 
-        <div className="mt-8 max-h-[500px] space-y-3 overflow-y-auto pr-1 scrollbar-thin">
+        <ScrollReveal
+          delayMs={160}
+          className="mt-8 max-h-[500px] space-y-3 overflow-y-auto pr-1 scrollbar-thin"
+        >
           {wishes.map((w) => (
             <article
               key={w.id}
@@ -85,7 +91,7 @@ export function GuestbookSection({
               <p className="mt-2 leading-relaxed opacity-90">{w.message}</p>
             </article>
           ))}
-        </div>
+        </ScrollReveal>
       </div>
     </section>
   );

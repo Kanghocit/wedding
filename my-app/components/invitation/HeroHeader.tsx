@@ -8,42 +8,44 @@ type Props = {
 
 export function HeroHeader({ groomShort, brideShort }: Props) {
   return (
-    <header className="relative w-full flex justify-center pt-16 pb-8 md:pt-24 md:pb-12">
-      <div className="relative w-[70%] ml-[2vw] md:ml-[1vw]">
-        <Image
-          src="/themes/khung-hoa.webp"
-          alt=""
-          width={1200}
-          height={2120}
-          className="w-full h-auto block"
-          priority
-        />
-        <div
-          className="absolute left-0 right-0 flex flex-col items-center text-center w-full -translate-x-[2vw] md:-translate-x-[1vw]"
-          style={{ color: "#404A1D", top: "12%" }}
-        >
+    <header className="relative flex w-full justify-center min-h-[100dvh] md:min-h-0 pt-12 pb-8 md:pt-24 md:pb-12">
+      <div className="relative mx-auto flex w-full max-w-[480px] flex-col justify-end md:justify-start md:w-[70%] md:max-w-none md:ml-[1vw] md:mr-0 px-3 md:px-0">
+        <div className="relative mx-auto w-[min(92%,21rem)] md:w-full">
+          <Image
+            src="/themes/khung-hoa.webp"
+            alt=""
+            width={1200}
+            height={2120}
+            className="block h-auto w-full"
+            priority
+          />
           <div
-            className={`flex flex-col items-center gap-0 -translate-y-[35px] md:-translate-y-[40px] text-center font-[family-name:var(--font-baskerville)] ${type.heroSubtitle}`}
+            className="absolute inset-x-0 top-[9%] bottom-[34%] flex flex-col items-center justify-center text-center md:bottom-auto md:top-[13.5%] md:block md:-translate-x-[1vw] md:h-auto"
+            style={{ color: "#404A1D" }}
           >
-            THE{"\n"}WEDDING{"\n"}OF
-          </div>
-          <div className="mt-[4%] w-full flex flex-col items-center text-center -translate-y-[35px] md:-translate-y-[40px] font-[family-name:var(--font-nautigal)] text-[#404A1D]">
-            <div className="flex w-[80%] justify-center">
-              <span
-                className="whitespace-nowrap leading-[1.45]"
-                style={{ fontSize: type.scriptName }}
-              >
-                {groomShort}
-              </span>
+            <div
+              className={`flex flex-col items-center gap-0 text-center font-[family-name:var(--font-baskerville)] md:-translate-y-[40px] ${type.heroSubtitle}`}
+            >
+              THE{"\n"}WEDDING{"\n"}OF
             </div>
-            <div style={{ fontSize: type.scriptAmp, lineHeight: 1.3 }}>&</div>
-            <div className="flex w-[80%] justify-center">
-              <span
-                className="whitespace-nowrap leading-[1.45]"
-                style={{ fontSize: type.scriptName }}
-              >
-                {brideShort}
-              </span>
+            <div className="mt-[4%] flex w-full flex-col items-center text-center font-[family-name:var(--font-script)] text-[#404A1D] md:-translate-y-[40px]">
+              <div className="flex w-[92%] justify-center md:w-[80%]">
+                <span
+                  className={`whitespace-nowrap leading-[1.28] ${type.heroScriptName}`}
+                >
+                  {groomShort}
+                </span>
+              </div>
+              <div className={`my-0.5 leading-[1.15] ${type.heroScriptAmp}`}>
+                &
+              </div>
+              <div className="flex w-[92%] justify-center md:w-[80%]">
+                <span
+                  className={`whitespace-nowrap leading-[1.28] ${type.heroScriptName}`}
+                >
+                  {brideShort}
+                </span>
+              </div>
             </div>
           </div>
         </div>

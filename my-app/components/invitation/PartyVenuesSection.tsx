@@ -2,6 +2,9 @@
 
 import { mapsDirectionsUrl, mapsEmbedUrl } from "@/lib/date-utils";
 import { headingClassName, layout, type } from "@/lib/theme";
+import { ScrollReveal } from "./ScrollReveal";
+
+export type PartySide = "groom" | "bride";
 
 type Venue = {
   label: string;
@@ -11,6 +14,7 @@ type Venue = {
 type Props = {
   groom: Venue;
   bride: Venue;
+  partySide?: PartySide;
 };
 
 function VenueBlock({ label, address }: Venue) {
@@ -19,10 +23,11 @@ function VenueBlock({ label, address }: Venue) {
       <p className={`${type.caption} uppercase text-[#404A1D]/70 mb-3`}>
         {label}
       </p>
-      <p className={`${type.bodySerif} leading-relaxed px-2`}>
-        {address}
-      </p>
-      <div className="mx-auto mt-4 mb-5 h-px w-full max-w-md bg-[#404A1D]/15" aria-hidden />
+      <p className={`${type.bodySerif} leading-relaxed px-2`}>{address}</p>
+      <div
+        className="mx-auto mt-4 mb-5 h-px w-full max-w-md bg-[#404A1D]/15"
+        aria-hidden
+      />
 
       <div className="relative mx-auto w-full max-w-lg overflow-hidden rounded-2xl border border-[#404A1D]/12 shadow-[0_8px_28px_rgba(64,74,29,0.08)] aspect-[4/3] md:aspect-[16/11] bg-[#404A1D]/5">
         <iframe
@@ -47,17 +52,33 @@ function VenueBlock({ label, address }: Venue) {
   );
 }
 
-export function PartyVenuesSection({ groom, bride }: Props) {
+function sectionHeading(partySide?: PartySide): string {
+  if (partySide === "groom") return "TIỆC CƯỚI NHÀ TRAI";
+  if (partySide === "bride") return "TIỆC CƯỚI NHÀ GÁI";
+  return "TIỆC CƯỚI SẼ TỔ CHỨC TẠI";
+}
+
+export function PartyVenuesSection({ groom, bride, partySide }: Props) {
+  const venues =
+    partySide === "groom"
+      ? [groom]
+      : partySide === "bride"
+        ? [bride]
+        : [groom, bride];
+
   return (
     <section
       className={`relative flex flex-col gap-10 md:gap-14 ${layout.sectionPadWide} pb-12 md:pb-16 z-10 text-center`}
     >
-      <h3 className={`${headingClassName()} leading-snug`}>
-        TIỆC CƯỚI SẼ TỔ CHỨC TẠI
-      </h3>
+      <ScrollReveal as="h3" className={`${headingClassName()} leading-snug`}>
+        {sectionHeading(partySide)}
+      </ScrollReveal>
 
-      <VenueBlock {...groom} />
-      <VenueBlock {...bride} />
+      {venues.map((venue, index) => (
+        <ScrollReveal key={venue.label} delayMs={80 + index * 120}>
+          <VenueBlock {...venue} />
+        </ScrollReveal>
+      ))}
     </section>
   );
 }

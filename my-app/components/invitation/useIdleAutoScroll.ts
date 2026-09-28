@@ -1,142 +1,179 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type RefObject } from "react";
 
-const SCROLL_SPEED_PX_PER_SEC = 32;
-const BOTTOM_THRESHOLD_PX = 24;
-const SCROLL_TO_TOP_MS = 850;
-const DELAY_AFTER_TOP_MS = 450;
+const SCROLL_SPEED_PX_PER_SEC = 44;
+const START_DELAY_MS = 120;
+const USER_LISTENER_DELAY_MS = 2800;
+const BOTTOM_THRESHOLD_PX = 40;
+const MIN_EXTRA_SCROLL_PX = 160;
 
 type Options = {
-  enabled: boolean;
+  active: boolean;
   paused: boolean;
+  scrollRootRef: RefObject<HTMLElement | null>;
+  restartKey: number;
 };
 
-function easeOutCubic(t: number): number {
-  return 1 - (1 - t) ** 3;
+function maxScrollFor(root: HTMLElement): number {
+  return Math.max(0, root.scrollHeight - root.clientHeight);
 }
 
-function smoothScrollToTop(durationMs: number): Promise<void> {
-  if (typeof window === "undefined") return Promise.resolve();
-
-  const startY = window.scrollY;
-  if (startY <= 0) return Promise.resolve();
-
-  return new Promise((resolve) => {
-    const start = performance.now();
-
-    const step = (now: number) => {
-      const t = Math.min((now - start) / durationMs, 1);
-      window.scrollTo(0, startY * (1 - easeOutCubic(t)));
-      if (t < 1) requestAnimationFrame(step);
-      else resolve();
-    };
-
-    requestAnimationFrame(step);
-  });
+function readyToAutoScroll(root: HTMLElement): boolean {
+  const max = maxScrollFor(root);
+  return max >= Math.max(MIN_EXTRA_SCROLL_PX, root.clientHeight * 0.2);
 }
 
-export function useIdleAutoScroll({ enabled, paused }: Options) {
-  const stoppedRef = useRef(false);
-  const rafRef = useRef<number | null>(null);
-  const lastTimeRef = useRef<number | null>(null);
-  const startTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const removeListenersRef = useRef<(() => void) | null>(null);
+export function useIdleAutoScroll({
+  active,
+  paused,
+  scrollRootRef,
+  restartKey,
+}: Options) {
+  const userPausedRef = useRef(false);
 
   useEffect(() => {
-    stoppedRef.current = false;
-  }, [enabled]);
+    const root = scrollRootRef.current;
 
-  useEffect(() => {
-    if (!enabled || paused) {
-      removeListenersRef.current?.();
-      removeListenersRef.current = null;
-      if (startTimerRef.current != null) {
-        clearTimeout(startTimerRef.current);
-        startTimerRef.current = null;
-      }
-      if (rafRef.current != null) {
-        cancelAnimationFrame(rafRef.current);
-        rafRef.current = null;
-      }
-      lastTimeRef.current = null;
+    if (!active || !root) {
+      userPausedRef.current = false;
       return;
     }
 
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let cancelled = false;
+    userPausedRef.current = false;
 
-    const stop = () => {
-      stoppedRef.current = true;
-      removeListenersRef.current?.();
-      removeListenersRef.current = null;
-      if (startTimerRef.current != null) {
-        clearTimeout(startTimerRef.current);
-        startTimerRef.current = null;
-      }
-      if (rafRef.current != null) {
-        cancelAnimationFrame(rafRef.current);
-        rafRef.current = null;
-      }
-      lastTimeRef.current = null;
+    let cancelled = false;
+    let rafId = 0;
+    let startTimer: ReturnType<typeof setTimeout> | null = null;
+    let listenerTimer: ReturnType<typeof setTimeout> | null = null;
+    let waitRaf = 0;
+    let lastFrame = 0;
+    let listenersAttached = false;
+    let detachListeners: (() => void) | null = null;
+
+    const cancelRaf = () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = 0;
+      if (waitRaf) cancelAnimationFrame(waitRaf);
+      waitRaf = 0;
+      lastFrame = 0;
+    };
+
+    const stopForUser = () => {
+      userPausedRef.current = true;
+      cancelRaf();
+    };
+
+    const attachUserListeners = () => {
+      if (listenersAttached || cancelled) return;
+      listenersAttached = true;
+
+      let touchY: number | null = null;
+
+      const onWheel = (e: WheelEvent) => {
+        if (!e.isTrusted) return;
+        if (Math.abs(e.deltaY) > 4) stopForUser();
+      };
+
+      const onTouchStart = (e: TouchEvent) => {
+        touchY = e.touches[0]?.clientY ?? null;
+      };
+
+      const onTouchMove = (e: TouchEvent) => {
+        if (touchY == null) return;
+        const y = e.touches[0]?.clientY ?? touchY;
+        if (Math.abs(y - touchY) > 12) stopForUser();
+      };
+
+      root.addEventListener("wheel", onWheel, { passive: true });
+      root.addEventListener("touchstart", onTouchStart, { passive: true });
+      root.addEventListener("touchmove", onTouchMove, { passive: true });
+
+      detachListeners = () => {
+        root.removeEventListener("wheel", onWheel);
+        root.removeEventListener("touchstart", onTouchStart);
+        root.removeEventListener("touchmove", onTouchMove);
+      };
     };
 
     const tick = (now: number) => {
-      if (stoppedRef.current || cancelled) return;
+      if (cancelled || userPausedRef.current) return;
 
-      const last = lastTimeRef.current ?? now;
-      lastTimeRef.current = now;
-      const dt = Math.min((now - last) / 1000, 0.05);
-      const maxScroll =
-        document.documentElement.scrollHeight - window.innerHeight;
-
-      if (window.scrollY >= maxScroll - BOTTOM_THRESHOLD_PX) {
-        stop();
+      if (paused) {
+        rafId = requestAnimationFrame(tick);
         return;
       }
 
-      window.scrollBy(0, SCROLL_SPEED_PX_PER_SEC * dt);
-      rafRef.current = requestAnimationFrame(tick);
-    };
-
-    const beginAutoScroll = () => {
-      if (cancelled || stoppedRef.current) return;
-
-      const onUserIntent = () => stop();
-      window.addEventListener("wheel", onUserIntent, { passive: true });
-      window.addEventListener("touchstart", onUserIntent, { passive: true });
-      window.addEventListener("keydown", onUserIntent);
-      removeListenersRef.current = () => {
-        window.removeEventListener("wheel", onUserIntent);
-        window.removeEventListener("touchstart", onUserIntent);
-        window.removeEventListener("keydown", onUserIntent);
-      };
-
-      lastTimeRef.current = null;
-      rafRef.current = requestAnimationFrame(tick);
-    };
-
-    const run = async () => {
-      if (reduced) {
-        window.scrollTo(0, 0);
-        startTimerRef.current = setTimeout(beginAutoScroll, DELAY_AFTER_TOP_MS);
+      const max = maxScrollFor(root);
+      if (!readyToAutoScroll(root)) {
+        rafId = requestAnimationFrame(tick);
         return;
       }
 
-      await smoothScrollToTop(SCROLL_TO_TOP_MS);
+      if (root.scrollTop >= max - BOTTOM_THRESHOLD_PX) {
+        root.scrollTop = max;
+        cancelRaf();
+        return;
+      }
+
+      if (!lastFrame) lastFrame = now;
+      const dt = Math.min((now - lastFrame) / 1000, 0.05);
+      lastFrame = now;
+
+      const step = SCROLL_SPEED_PX_PER_SEC * dt;
+      const next = Math.min(root.scrollTop + step, max);
+      root.scrollTop = next;
+
+      rafId = requestAnimationFrame(tick);
+    };
+
+    const beginLoop = () => {
+      if (cancelled || userPausedRef.current) return;
+      const alreadyRunning = rafId !== 0;
+      cancelRaf();
+      lastFrame = 0;
+      rafId = requestAnimationFrame(tick);
+
+      if (alreadyRunning || listenersAttached) return;
+      if (listenerTimer) clearTimeout(listenerTimer);
+      listenerTimer = setTimeout(() => {
+        listenerTimer = null;
+        attachUserListeners();
+      }, USER_LISTENER_DELAY_MS);
+    };
+
+    const waitThenBegin = () => {
       if (cancelled) return;
-
-      startTimerRef.current = setTimeout(() => {
-        startTimerRef.current = null;
-        beginAutoScroll();
-      }, DELAY_AFTER_TOP_MS);
+      if (readyToAutoScroll(root)) {
+        beginLoop();
+        return;
+      }
+      waitRaf = requestAnimationFrame(waitThenBegin);
     };
 
-    void run();
+    startTimer = setTimeout(() => {
+      startTimer = null;
+      waitThenBegin();
+    }, START_DELAY_MS);
+
+    const ro = new ResizeObserver(() => {
+      if (cancelled || userPausedRef.current || paused) return;
+      if (!readyToAutoScroll(root)) return;
+      if (!rafId) beginLoop();
+    });
+    ro.observe(root);
+    const inner = root.firstElementChild;
+    if (inner) ro.observe(inner);
+    const main = root.querySelector("[data-testid='mai-lan-white-template']");
+    if (main) ro.observe(main);
 
     return () => {
       cancelled = true;
-      stop();
+      ro.disconnect();
+      if (startTimer) clearTimeout(startTimer);
+      if (listenerTimer) clearTimeout(listenerTimer);
+      detachListeners?.();
+      cancelRaf();
     };
-  }, [enabled, paused]);
+  }, [active, paused, restartKey, scrollRootRef]);
 }

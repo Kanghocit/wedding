@@ -11,6 +11,15 @@ export type TimelineItem = {
   label: string;
 };
 
+export type PreEventInfo = {
+  date: string;
+  time: string;
+  title: string;
+  subtitle: string;
+  place: string;
+  address: string;
+};
+
 export type SeedWish = {
   name: string;
   message: string;
@@ -37,8 +46,6 @@ export type WeddingConfig = {
   brideShortName: string;
   groomFullName: string;
   brideFullName: string;
-  groomTitle: string;
-  brideTitle: string;
   groomFather: string;
   groomMother: string;
   brideFather: string;
@@ -47,7 +54,10 @@ export type WeddingConfig = {
   brideAddress: string;
   ceremonyHeader: string;
   ceremonyPlace: string;
+  /** Lễ Chủ nhật — nhà gái / mặc định trang chủ */
   ceremonyTime: string;
+  /** Lễ Chủ nhật — nhà trai */
+  groomCeremonyTime: string;
   partyTime: string;
   guestReceptionTime: string;
   /** @deprecated use groomPartyAddress / bridePartyAddress */
@@ -56,6 +66,8 @@ export type WeddingConfig = {
   bridePartyAddress: string;
   groomPartyLabel: string;
   bridePartyLabel: string;
+  bridePreEvent: PreEventInfo | null;
+  groomPreEvent: PreEventInfo | null;
   weddingDate: string;
   timezone: string;
   dressCodeLabel: string;

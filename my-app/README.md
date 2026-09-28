@@ -12,6 +12,8 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000). Guest link: `/?guest=Tên%20khách`.
 
+Party by side: `/groom?guest=...` (nhà trai only), `/bride?guest=...` (nhà gái only). Root `/` shows both venues.
+
 Admin: [http://localhost:3000/admin](http://localhost:3000/admin) — password from `ADMIN_PASSWORD` in `.env`.
 
 RSVP and guestbook entries are stored in `DATA_DIR` (default `./data`).

@@ -139,7 +139,7 @@ export function EnvelopeCover({
               priority
             />
           </div>
-          <div className="absolute -right-3 -bottom-3 h-[12rem] w-[12rem] md:h-[13rem] md:w-[13rem] scale-x-[-1] opacity-100 saturate-[1.12] contrast-[1.08]">
+          <div className="absolute -right-2 -bottom-1 h-[9rem] w-[9rem] md:h-[10rem] md:w-[10rem] scale-x-[-1] opacity-90 saturate-[1.08] contrast-[1.05] [mask-image:linear-gradient(to_top,black_55%,transparent_92%)]">
             <Image
               src="/themes/hoa.webp"
               alt=""
@@ -151,7 +151,7 @@ export function EnvelopeCover({
           </div>
         </div>
 
-        <div className="relative z-10 flex flex-col items-center">
+        <div className="relative z-10 flex w-full flex-col items-center pb-1 before:pointer-events-none before:absolute before:inset-x-0 before:bottom-0 before:top-[38%] before:-z-10 before:rounded-b-2xl before:bg-gradient-to-b before:from-transparent before:via-[#FFFAF7]/80 before:to-[#FFFAF7]">
           <div className="mb-4 flex h-9 w-9 items-center justify-center rounded-full bg-[#404A1D] text-[11px] text-white">
             ♥
           </div>

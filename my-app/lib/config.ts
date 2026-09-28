@@ -1,4 +1,10 @@
-import type { BankAccount, SeedWish, TimelineItem, WeddingConfig } from "./types";
+import type {
+  BankAccount,
+  PreEventInfo,
+  SeedWish,
+  TimelineItem,
+  WeddingConfig,
+} from "./types";
 
 function env(key: string, fallback = ""): string {
   return process.env[key]?.trim() ?? fallback;
@@ -51,6 +57,50 @@ export function vietQrImageUrl(bankCode: string, accountNumber: string): string 
   return `https://img.vietqr.io/image/${bankCode}-${accountNumber}-compact2.png?accountName=${encodeURIComponent("")}`;
 }
 
+function parsePreEvent(
+  prefix: "BRIDE" | "GROOM",
+  fallbackAddress: string,
+): PreEventInfo | null {
+  const date = env(`${prefix}_PRE_EVENT_DATE`);
+  if (!date) return null;
+
+  const address = env(`${prefix}_PRE_EVENT_ADDRESS`) || fallbackAddress;
+
+  return {
+    date,
+    time: env(`${prefix}_PRE_EVENT_TIME`, "16:30"),
+    title: env(`${prefix}_PRE_EVENT_TITLE`, "BỮA CƠM THÂN MẬT"),
+    subtitle: env(
+      `${prefix}_PRE_EVENT_SUBTITLE`,
+      "TỚI DỰ BỮA CƠM THÂN MẬT MỪNG LỄ VU QUY",
+    ),
+    place: env(
+      `${prefix}_PRE_EVENT_PLACE`,
+      prefix === "GROOM" ? "GIA ĐÌNH NHÀ TRAI" : "GIA ĐÌNH NHÀ GÁI",
+    ),
+    address,
+  };
+}
+
+export type PartySideForPreEvent = "groom" | "bride" | undefined;
+
+export function resolvePreEvent(
+  config: Pick<WeddingConfig, "bridePreEvent" | "groomPreEvent">,
+  partySide?: PartySideForPreEvent,
+): PreEventInfo | null {
+  if (partySide === "groom") return config.groomPreEvent;
+  if (partySide === "bride") return config.bridePreEvent;
+  return config.bridePreEvent ?? config.groomPreEvent;
+}
+
+export function resolveCeremonyTime(
+  config: Pick<WeddingConfig, "ceremonyTime" | "groomCeremonyTime">,
+  partySide?: PartySideForPreEvent,
+): string {
+  if (partySide === "groom") return config.groomCeremonyTime;
+  return config.ceremonyTime;
+}
+
 export function getWeddingConfig(): WeddingConfig {
   return {
     pageTitle: env("PAGE_TITLE", "Thiệp Cưới Mai Lan Trắng"),
@@ -58,8 +108,6 @@ export function getWeddingConfig(): WeddingConfig {
     brideShortName: env("BRIDE_SHORT_NAME", "Thu Hà"),
     groomFullName: env("GROOM_FULL_NAME", "Hoàng Văn Long"),
     brideFullName: env("BRIDE_FULL_NAME", "Nguyễn Thị Thu Hà"),
-    groomTitle: env("GROOM_TITLE", "TRƯỞNG NAM"),
-    brideTitle: env("BRIDE_TITLE", "ÚT NỮ"),
     groomFather: env("GROOM_FATHER", "Hoàng Văn Minh"),
     groomMother: env("GROOM_MOTHER", "Bùi Thị Lan"),
     brideFather: env("BRIDE_FATHER", "Nguyễn Văn Cường"),
@@ -77,7 +125,8 @@ export function getWeddingConfig(): WeddingConfig {
       "LỄ THÀNH HÔN ĐƯỢC CỬ HÀNH TẠI\nTƯ GIA",
     ).replace(/\\n/g, "\n"),
     ceremonyPlace: env("CEREMONY_PLACE", "TƯ GIA"),
-    ceremonyTime: env("CEREMONY_TIME", "09:00"),
+    ceremonyTime: env("CEREMONY_TIME", "12:00"),
+    groomCeremonyTime: env("GROOM_CEREMONY_TIME", "09:30"),
     partyTime: env("PARTY_TIME", "11:00"),
     guestReceptionTime: env("GUEST_RECEPTION_TIME", "10:30"),
     partyAddress: env(
@@ -100,6 +149,8 @@ export function getWeddingConfig(): WeddingConfig {
     ),
     groomPartyLabel: env("GROOM_PARTY_LABEL", "Nhà trai"),
     bridePartyLabel: env("BRIDE_PARTY_LABEL", "Nhà gái"),
+    bridePreEvent: parsePreEvent("BRIDE", env("BRIDE_ADDRESS", "")),
+    groomPreEvent: parsePreEvent("GROOM", env("GROOM_ADDRESS", "")),
     weddingDate: env("WEDDING_DATE", "2026-04-26"),
     timezone: env("TIMEZONE", "Asia/Saigon"),
     dressCodeLabel: env("DRESS_CODE_LABEL", "Trang phục dự tiệc"),

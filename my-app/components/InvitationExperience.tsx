@@ -1,9 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { PublicWeddingConfig } from "@/lib/config";
+import {
+  type PublicWeddingConfig,
+  resolveCeremonyTime,
+  resolvePreEvent,
+} from "@/lib/config";
 import { googleCalendarUrl } from "@/lib/date-utils";
-import { colors, headingClassName, layout, type } from "@/lib/theme";
+import { colors, layout, type } from "@/lib/theme";
 import type { WishEntry } from "@/lib/types";
 import { CeremonySection } from "./invitation/CeremonySection";
 import { EnvelopeCover } from "./invitation/EnvelopeCover";
@@ -14,25 +18,38 @@ import { GiftModal } from "./invitation/GiftModal";
 import { GuestbookSection } from "./invitation/GuestbookSection";
 import { HeroHeader } from "./invitation/HeroHeader";
 import { MusicFab } from "./invitation/MusicFab";
-import { PartyCalendarSection } from "./invitation/PartyCalendarSection";
 import { PhotoLightbox } from "./invitation/PhotoLightbox";
 import { RsvpModal } from "./invitation/RsvpModal";
+import { ScrollReveal } from "./invitation/ScrollReveal";
 import { useIdleAutoScroll } from "./invitation/useIdleAutoScroll";
 import { useScrollParallax } from "./invitation/useScrollParallax";
-import { PartyVenuesSection } from "./invitation/PartyVenuesSection";
-import { WeddingTimelineSection } from "./invitation/WeddingTimelineSection";
+import { useScrollReveal } from "./invitation/useScrollReveal";
+import {
+  PartyVenuesSection,
+  type PartySide,
+} from "./invitation/PartyVenuesSection";
 
 type Props = {
   config: PublicWeddingConfig;
   guestName?: string;
+  partySide?: PartySide;
 };
 
-export function InvitationExperience({ config, guestName }: Props) {
+export function InvitationExperience({
+  config,
+  guestName,
+  partySide,
+}: Props) {
+  const scrollRootRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
-  const parallaxA = useScrollParallax(mainRef, 0.35);
-  const parallaxB = useScrollParallax(mainRef, -0.2);
+  const userGestureAtRef = useRef(0);
+  const parallaxA = useScrollParallax(mainRef, 0.35, scrollRootRef);
+  const parallaxB = useScrollParallax(mainRef, -0.2, scrollRootRef);
 
   const [coverMounted, setCoverMounted] = useState(true);
+  /** Bật auto-scroll ngay lúc chạm "Mở thiệp" (iOS cần trong user gesture). */
+  const [invitationUnlocked, setInvitationUnlocked] = useState(false);
+  const [autoScrollKey, setAutoScrollKey] = useState(0);
   const [musicPlaying, setMusicPlaying] = useState(false);
   const [photoIndex, setPhotoIndex] = useState(0);
   const [lightbox, setLightbox] = useState(false);
@@ -50,23 +67,64 @@ export function InvitationExperience({ config, guestName }: Props) {
   const photos = config.galleryUrls;
 
   useIdleAutoScroll({
-    enabled: !coverMounted,
+    active: invitationUnlocked,
     paused: lightbox || rsvpOpen || giftOpen,
+    scrollRootRef,
+    restartKey: autoScrollKey,
   });
+
+  useScrollReveal({
+    active: invitationUnlocked,
+    scrollRootRef,
+    contentRef: mainRef,
+  });
+
+  const preEvent = useMemo(
+    () => resolvePreEvent(config, partySide),
+    [config, partySide],
+  );
+
+  const ceremonyTime = useMemo(
+    () => resolveCeremonyTime(config, partySide),
+    [config, partySide],
+  );
+
+  const ceremonyLocation = useMemo(() => {
+    if (partySide === "groom") return config.groomAddress;
+    if (partySide === "bride") return config.brideAddress;
+    return config.brideAddress;
+  }, [config, partySide]);
 
   const calendarLink = useMemo(
     () =>
       googleCalendarUrl({
-        title: `Đám cưới ${config.groomFullName} & ${config.brideFullName}`,
+        title: `Lễ thành hôn ${config.groomFullName} & ${config.brideFullName}`,
         isoDate: config.weddingDate,
-        startTime: config.partyTime,
+        startTime: ceremonyTime,
         endTime: "13:00",
         timezone: config.timezone,
-        details: `Tiệc cưới của ${config.groomFullName} & ${config.brideFullName}`,
-        location: `Nhà trai: ${config.groomPartyAddress} | Nhà gái: ${config.bridePartyAddress}`,
+        details: config.ceremonyHeader.replace(/\n/g, " "),
+        location: ceremonyLocation,
       }),
-    [config],
+    [config, ceremonyLocation, ceremonyTime],
   );
+
+  const preEventCalendarLink = useMemo(() => {
+    if (!preEvent) return null;
+    return googleCalendarUrl({
+      title: preEvent.title,
+      isoDate: preEvent.date,
+      startTime: preEvent.time,
+      endTime: "18:30",
+      timezone: config.timezone,
+      details: preEvent.subtitle,
+      location: preEvent.address,
+    });
+  }, [config.timezone, preEvent]);
+
+  const handleCoverDismiss = useCallback(() => {
+    setCoverMounted(false);
+  }, []);
 
   const loadWishes = useCallback(async () => {
     const res = await fetch("/api/wishes");
@@ -92,6 +150,21 @@ export function InvitationExperience({ config, guestName }: Props) {
       .then(() => setMusicPlaying(true))
       .catch(() => {});
   };
+
+  const handleCoverOpenStart = useCallback(() => {
+    userGestureAtRef.current = performance.now();
+    startMusic();
+    setInvitationUnlocked(true);
+    setAutoScrollKey((k) => k + 1);
+
+    const root = scrollRootRef.current;
+    if (root) {
+      root.scrollTo({ top: 0, behavior: "auto" });
+      // Một bước cuộn đồng bộ trong user gesture (Safari iOS).
+      root.scrollTop = 1;
+      root.scrollTop = 0;
+    }
+  }, [config.musicUrl]);
 
   const toggleMusic = () => {
     const audio = audioRef.current;
@@ -169,18 +242,23 @@ export function InvitationExperience({ config, guestName }: Props) {
           groomShort={config.groomShortName}
           brideShort={config.brideShortName}
           weddingDate={config.weddingDate}
-          onOpenStart={startMusic}
-          onDismiss={() => setCoverMounted(false)}
+          onOpenStart={handleCoverOpenStart}
+          onDismiss={handleCoverDismiss}
         />
       )}
 
-      <div className="flex w-full justify-center overflow-x-clip bg-white scrollbar-none">
-        <div
-          ref={mainRef}
-          className={`relative w-full ${layout.containerMax} md:mx-auto overflow-hidden md:border md:border-[#404A1D22]`}
-          style={{ backgroundColor: colors.cream, color: colors.olive }}
-          data-testid="mai-lan-white-template"
-        >
+      <div
+        ref={scrollRootRef}
+        data-invitation-scroll
+        className="h-[100dvh] w-full overflow-y-auto overflow-x-clip overscroll-y-contain touch-pan-y bg-white scrollbar-none [-webkit-overflow-scrolling:touch]"
+      >
+        <div className="flex w-full justify-center">
+          <div
+            ref={mainRef}
+            className={`relative w-full ${layout.containerMax} md:mx-auto overflow-x-clip overflow-y-visible md:border md:border-[#404A1D22]`}
+            style={{ backgroundColor: colors.cream, color: colors.olive }}
+            data-testid="mai-lan-white-template"
+          >
           <FloralLayer
             className="top-0 pointer-events-none overflow-hidden"
             style={{ right: "50%" }}
@@ -195,7 +273,7 @@ export function InvitationExperience({ config, guestName }: Props) {
           />
 
           <section
-            className={`relative flex flex-col ${layout.sectionGap} ${layout.sectionPadX} pt-20 md:pt-28 pb-14 md:pb-20 z-10`}
+            className={`relative flex flex-col ${layout.sectionGap} ${layout.sectionPadX} pt-6 md:pt-28 pb-14 md:pb-20 z-10`}
           >
             <FloralLayer
               className="pointer-events-none top-[22%]"
@@ -214,29 +292,32 @@ export function InvitationExperience({ config, guestName }: Props) {
               opacity={0.3}
             />
 
-            <CeremonySection {...config} />
-
-            {!coverMounted ? (
-              <GalleryCards
-                photos={photos}
-                invitationOpen
-                onOpenLightbox={(i) => {
-                  setPhotoIndex(i);
-                  setLightbox(true);
-                }}
-              />
-            ) : null}
-
-            <PartyCalendarSection
-              weddingDate={config.weddingDate}
-              partyTime={config.partyTime}
-              guestReceptionTime={config.guestReceptionTime}
+            <CeremonySection
+              {...config}
+              partySide={partySide}
+              preEvent={preEvent}
+              ceremonyTime={ceremonyTime}
               calendarLink={calendarLink}
+              preEventCalendarLink={preEventCalendarLink}
               onRsvp={() => setRsvpOpen(true)}
             />
+
+            {!coverMounted ? (
+              <ScrollReveal className="relative z-20 -mx-2 md:-mx-4 overflow-visible w-[calc(100%+1rem)] md:w-[calc(100%+2rem)] max-w-none">
+                <GalleryCards
+                  photos={photos}
+                  invitationOpen
+                  onOpenLightbox={(i) => {
+                    setPhotoIndex(i);
+                    setLightbox(true);
+                  }}
+                />
+              </ScrollReveal>
+            ) : null}
           </section>
 
           <PartyVenuesSection
+            partySide={partySide}
             groom={{
               label: config.groomPartyLabel,
               address: config.groomPartyAddress,
@@ -246,26 +327,6 @@ export function InvitationExperience({ config, guestName }: Props) {
               address: config.bridePartyAddress,
             }}
           />
-
-          <section
-            className={`relative ${layout.sectionPadWide} pb-10 md:pb-12 z-10 text-center`}
-          >
-            <h2 className={`${headingClassName()} mb-4`}>DRESS CODE</h2>
-            <p className={`${type.bodySerif} opacity-80 mb-6`}>
-              {config.dressCodeLabel}
-            </p>
-            <div className="flex justify-center gap-4 md:gap-5 flex-wrap">
-              {config.dressColors.map((color) => (
-                <span
-                  key={color}
-                  className="h-14 w-14 md:h-[4.5rem] md:w-[4.5rem] rounded-full border border-[#404A1D22] shadow-sm"
-                  style={{ backgroundColor: color }}
-                />
-              ))}
-            </div>
-          </section>
-
-          <WeddingTimelineSection items={config.timeline} />
 
           <GuestbookSection
             wishes={wishes}
@@ -281,19 +342,22 @@ export function InvitationExperience({ config, guestName }: Props) {
 
           <GiftEnvelopes onOpen={() => setGiftOpen(true)} />
 
-          <footer
+          <ScrollReveal
+            as="footer"
             className={`relative flex flex-col items-center ${layout.sectionPadWide} pb-16 md:pb-20 text-center z-10`}
           >
             <p className={`${type.footerNote} max-w-md px-4`}>
               {config.footerMessage}
             </p>
-          </footer>
+          </ScrollReveal>
 
-          {config.musicUrl ? (
-            <MusicFab playing={musicPlaying} onToggle={toggleMusic} />
-          ) : null}
+          </div>
         </div>
       </div>
+
+      {config.musicUrl ? (
+        <MusicFab playing={musicPlaying} onToggle={toggleMusic} />
+      ) : null}
 
       {lightbox && photos.length > 0 && (
         <PhotoLightbox

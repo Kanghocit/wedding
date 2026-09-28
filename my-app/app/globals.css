@@ -13,7 +13,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-display: var(--font-nautigal);
+  --font-display: var(--font-script);
   --font-serif: var(--font-garamond);
   --font-heading: var(--font-baskerville);
   --font-ui: var(--font-montserrat);
@@ -119,6 +119,19 @@ body {
   animation-delay: 0.45s;
 }
 
+.gallery-swiper {
+  overflow: visible;
+}
+
+.gallery-swiper .swiper-wrapper {
+  align-items: center;
+}
+
+.gallery-swiper-slide {
+  width: auto;
+  height: auto;
+}
+
 .gallery-snap {
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
@@ -135,6 +148,28 @@ body {
 .scrollbar-thin::-webkit-scrollbar-thumb {
   background: var(--olive-muted);
   border-radius: 4px;
+}
+
+[data-scroll-reveal] {
+  opacity: 0;
+  transform: translateY(1.25rem);
+  transition:
+    opacity 0.65s ease,
+    transform 0.65s ease;
+  will-change: opacity, transform;
+}
+
+[data-scroll-reveal].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-scroll-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 .modal-sheet {
