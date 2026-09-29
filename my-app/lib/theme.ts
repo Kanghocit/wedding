@@ -31,9 +31,9 @@ export const type = {
   heroScriptAmp: "text-[clamp(1.5rem,6.2vw,2rem)] md:text-[min(86px,20vw)]",
   scriptName: "min(120px, 28vw)",
   scriptAmp: "min(100px, 20vw)",
-  ceremonyIntro: `${montserrat} text-[13px] md:text-[15px] font-light tracking-[0.2em] text-[#404A1D]/85`,
-  ceremonyName: `${script} text-[clamp(2.85rem,12.5vw,5.25rem)] md:text-[80px] leading-[1.06] font-normal text-[#404A1D]`,
-  ceremonyAmp: "min(112px, 26vw)",
+  ceremonyIntro: `${montserrat} text-[14px] md:text-[15px] font-light tracking-[0.2em] text-[#404A1D]/85`,
+  ceremonyName: `${script} text-[clamp(2.85rem,17vw,5rem)] md:text-[80px] leading-[1.02] font-normal text-[#404A1D]`,
+  ceremonyAmp: `${script} text-[clamp(1.65rem,8vw,2.125rem)] md:text-[34px] text-[#404A1D]/75 leading-none font-normal`,
   bodyUi: montserrat,
   cover: {
     name: `${script} text-[1.75rem] md:text-[2rem] leading-tight font-normal text-[#404A1D]`,

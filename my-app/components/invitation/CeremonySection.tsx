@@ -100,11 +100,22 @@ export function CeremonySection({
     />
   );
 
-  const groomNameBlock = (
-    <h3 className={typeTokens.ceremonyName}>{config.groomFullName}</h3>
-  );
-  const brideNameBlock = (
-    <h3 className={typeTokens.ceremonyName}>{config.brideFullName}</h3>
+  const coupleStagger = (
+    <div className="ceremony-couple-stagger" aria-label="Tên chú rể và cô dâu">
+      <h3
+        className={`ceremony-couple-stagger__name ceremony-couple-stagger__name--start ${typeTokens.ceremonyName}`}
+      >
+        {groomFirst ? config.groomFullName : config.brideFullName}
+      </h3>
+      <p className={`ceremony-couple-stagger__amp ${typeTokens.ceremonyAmp}`}>
+        &
+      </p>
+      <h3
+        className={`ceremony-couple-stagger__name ceremony-couple-stagger__name--end ${typeTokens.ceremonyName}`}
+      >
+        {groomFirst ? config.brideFullName : config.groomFullName}
+      </h3>
+    </div>
   );
 
   return (
@@ -121,37 +132,14 @@ export function CeremonySection({
         {groomFirst ? brideFamily : groomFamily}
       </ScrollReveal>
 
-      <ScrollReveal
-        delayMs={160}
-        className="text-center space-y-4 md:space-y-5"
-      >
-        <p className={typeTokens.ceremonyIntro}>TRÂN TRỌNG BÁO TIN</p>
-        <p className={`${typeTokens.ceremonyIntro} tracking-[0.15em]`}>
-          LỄ THÀNH HÔN CỦA CON CHÚNG TÔI
-        </p>
-        {groomFirst ? (
-          <>
-            {groomNameBlock}
-            <p
-              className="font-[family-name:var(--font-script)] text-[#404A1D]"
-              style={{ fontSize: typeTokens.ceremonyAmp, lineHeight: 1.15 }}
-            >
-              &
-            </p>
-            {brideNameBlock}
-          </>
-        ) : (
-          <>
-            {brideNameBlock}
-            <p
-              className="font-[family-name:var(--font-script)] text-[#404A1D]"
-              style={{ fontSize: typeTokens.ceremonyAmp, lineHeight: 1.15 }}
-            >
-              &
-            </p>
-            {groomNameBlock}
-          </>
-        )}
+      <ScrollReveal delayMs={160} className="text-center">
+        <div className="space-y-3 md:space-y-3.5">
+          <p className={typeTokens.ceremonyIntro}>TRÂN TRỌNG BÁO TIN</p>
+          <p className={`${typeTokens.ceremonyIntro} tracking-[0.15em]`}>
+            LỄ THÀNH HÔN CỦA CON CHÚNG TÔI
+          </p>
+        </div>
+        {coupleStagger}
       </ScrollReveal>
 
       {preEvent ? (
@@ -163,7 +151,7 @@ export function CeremonySection({
             time={preEvent.time}
             place={preEvent.place}
             address={preEvent.address}
-            className="pt-2 text-center"
+            className="pt-0 text-center"
           />
         </ScrollReveal>
       ) : null}
