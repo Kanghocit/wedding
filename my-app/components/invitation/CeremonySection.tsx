@@ -42,11 +42,13 @@ function FamilyBlock({
   address: string;
 }) {
   return (
-    <div>
+    <div className="min-w-0">
       <p className={`${typeTokens.caption} mb-3`}>Ông Bà</p>
-      <p className={typeTokens.bodySerif}>{father}</p>
-      <p className={typeTokens.bodySerif}>{mother}</p>
-      <p className={`mt-3 leading-relaxed px-2 ${typeTokens.addressSerif}`}>
+      <p className={`${typeTokens.bodySerif} leading-snug`}>{father}</p>
+      <p className={`${typeTokens.bodySerif} leading-snug`}>{mother}</p>
+      <p
+        className={`mt-3 px-1 leading-relaxed ${typeTokens.addressSerif}`}
+      >
         {address}
       </p>
     </div>
@@ -58,6 +60,7 @@ export function CeremonySection({
   preEvent,
   calendarLink,
   preEventCalendarLink,
+  ceremonyTime,
   onRsvp,
   ...config
 }: Props) {
@@ -115,24 +118,15 @@ export function CeremonySection({
   return (
     <>
       <ScrollReveal as="h2" className={headingClassName()}>
-        THÔNG TIN LỄ THÀNH HÔN
+        THÔNG TIN LỄ CƯỚI
       </ScrollReveal>
 
       <ScrollReveal
         delayMs={80}
-        className={`grid md:grid-cols-2 gap-10 md:gap-12 text-center ${typeTokens.bodySerif}`}
+        className={`ceremony-families-row ${typeTokens.bodySerif}`}
       >
-        {groomFirst ? (
-          <>
-            {groomFamily}
-            {brideFamily}
-          </>
-        ) : (
-          <>
-            {brideFamily}
-            {groomFamily}
-          </>
-        )}
+        {groomFirst ? groomFamily : brideFamily}
+        {groomFirst ? brideFamily : groomFamily}
       </ScrollReveal>
 
       <ScrollReveal
@@ -187,7 +181,7 @@ export function CeremonySection({
           subtitle={undefined}
           title={config.ceremonyHeader}
           isoDate={config.weddingDate}
-          time={config.ceremonyTime}
+          time={ceremonyTime}
           place={config.ceremonyPlace}
           address={ceremonyAddress}
           className={`text-center ${preEvent ? "pt-4 md:pt-6" : "pt-4"}`}

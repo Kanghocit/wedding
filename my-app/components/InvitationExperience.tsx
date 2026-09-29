@@ -166,6 +166,14 @@ export function InvitationExperience({ config, guestName, partySide }: Props) {
       root.scrollTop = 1;
       root.scrollTop = 0;
     }
+
+    const main = mainRef.current;
+    if (main) {
+      main.classList.add("invitation-hero-reveal");
+      window.setTimeout(() => {
+        main.classList.add("is-revealed");
+      }, 520);
+    }
   }, [config.musicUrl]);
 
   const toggleMusic = () => {
@@ -252,7 +260,7 @@ export function InvitationExperience({ config, guestName, partySide }: Props) {
       <div
         ref={scrollRootRef}
         data-invitation-scroll
-        className="h-[100dvh] w-full overflow-y-auto overflow-x-clip overscroll-y-contain touch-pan-y bg-white scrollbar-none [-webkit-overflow-scrolling:touch]"
+        className={`h-[100dvh] w-full overflow-y-auto overflow-x-clip overscroll-y-contain touch-pan-y bg-white scrollbar-none [-webkit-overflow-scrolling:touch] ${coverMounted ? "pointer-events-none" : ""}`}
       >
         <div className="flex w-full justify-center">
           <div

@@ -126,7 +126,7 @@ export function getWeddingConfig(): WeddingConfig {
     ).replace(/\\n/g, "\n"),
     ceremonyPlace: env("CEREMONY_PLACE", "TƯ GIA"),
     ceremonyTime: env("CEREMONY_TIME", "12:00"),
-    groomCeremonyTime: env("GROOM_CEREMONY_TIME", "09:30"),
+    groomCeremonyTime: env("GROOM_CEREMONY_TIME", "12:30"),
     partyTime: env("PARTY_TIME", "11:00"),
     guestReceptionTime: env("GUEST_RECEPTION_TIME", "10:30"),
     partyAddress: env(
