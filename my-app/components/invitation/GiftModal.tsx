@@ -1,6 +1,8 @@
 "use client";
 
+import { useCallback, useState } from "react";
 import { vietQrImageUrl } from "@/lib/config";
+import { copyToClipboard } from "@/lib/copy-to-clipboard";
 import type { BankAccount } from "@/lib/types";
 import { modalHeadingClassName, type } from "@/lib/theme";
 
@@ -11,6 +13,19 @@ type Props = {
 };
 
 export function GiftModal({ open, banks, onClose }: Props) {
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
+
+  const handleCopy = useCallback(async (accountNumber: string) => {
+    const ok = await copyToClipboard(accountNumber);
+    if (!ok) return;
+    setCopiedKey(accountNumber);
+    window.setTimeout(() => {
+      setCopiedKey((current) =>
+        current === accountNumber ? null : current,
+      );
+    }, 2000);
+  }, []);
+
   if (!open) return null;
 
   return (
@@ -39,6 +54,7 @@ export function GiftModal({ open, banks, onClose }: Props) {
               bank.role === "groom"
                 ? `Chú Rể - ${bank.accountName}`
                 : `Cô Dâu - ${bank.accountName}`;
+            const copied = copiedKey === bank.accountNumber;
             return (
               <div
                 key={bank.accountNumber}
@@ -61,10 +77,14 @@ export function GiftModal({ open, banks, onClose }: Props) {
                 </div>
                 <button
                   type="button"
-                  className="mt-1.5 text-[10px] px-2 py-1 inline-flex items-center gap-1 font-medium rounded-full transition-colors bg-[#404A1D15]"
-                  onClick={() => void navigator.clipboard.writeText(bank.accountNumber)}
+                  className={`mt-1.5 text-[10px] px-2.5 py-1.5 inline-flex items-center gap-1 font-medium rounded-full transition-colors ${
+                    copied
+                      ? "bg-[#404A1D] text-white"
+                      : "bg-[#404A1D15] hover:bg-[#404A1D25] active:scale-[0.98]"
+                  }`}
+                  onClick={() => void handleCopy(bank.accountNumber)}
                 >
-                  Sao chép STK
+                  {copied ? "Đã chép!" : "Sao chép STK"}
                 </button>
                 <a
                   href={qr}

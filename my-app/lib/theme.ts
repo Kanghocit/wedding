@@ -23,16 +23,17 @@ const montserrat = "font-[family-name:var(--font-montserrat)]";
 const script = "font-[family-name:var(--font-script)]";
 
 export const type = {
-  heading: "uppercase font-normal text-center tracking-[0.05em] text-[20px] md:text-[26px]",
+  heading:
+    "uppercase font-normal text-center tracking-[0.05em] text-[20px] md:text-[26px]",
   heroSubtitle:
     "text-[clamp(12px,3.1vw,16px)] tracking-[0.22em] md:tracking-[0.25em] leading-[1.55] opacity-80 whitespace-pre-line",
-  heroScriptName:
-    "text-[clamp(2.35rem,10vw,3rem)] md:text-[min(120px,28vw)]",
-  heroScriptAmp:
-    "text-[clamp(1.5rem,6.2vw,2rem)] md:text-[min(86px,20vw)]",
+  heroScriptName: "text-[clamp(2.35rem,10vw,3rem)] md:text-[min(120px,28vw)]",
+  heroScriptAmp: "text-[clamp(1.5rem,6.2vw,2rem)] md:text-[min(86px,20vw)]",
   scriptName: "min(120px, 28vw)",
-  scriptAmp: "min(86px, 20vw)",
-  ceremonyName: "text-[clamp(2.25rem,10vw,4rem)] md:text-[64px] leading-[1.1]",
+  scriptAmp: "min(100px, 20vw)",
+  ceremonyIntro: `${montserrat} text-[13px] md:text-[15px] font-light tracking-[0.2em] text-[#404A1D]/85`,
+  ceremonyName: `${script} text-[clamp(2.85rem,12.5vw,5.25rem)] md:text-[80px] leading-[1.06] font-normal text-[#404A1D]`,
+  ceremonyAmp: "min(112px, 26vw)",
   bodyUi: montserrat,
   cover: {
     name: `${script} text-[1.75rem] md:text-[2rem] leading-tight font-normal text-[#404A1D]`,

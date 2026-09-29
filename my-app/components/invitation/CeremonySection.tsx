@@ -101,18 +101,10 @@ export function CeremonySection({
   );
 
   const groomNameBlock = (
-    <h3
-      className={`${typeTokens.ceremonyName} font-[family-name:var(--font-garamond)] text-[#404A1D]`}
-    >
-      {config.groomFullName}
-    </h3>
+    <h3 className={typeTokens.ceremonyName}>{config.groomFullName}</h3>
   );
   const brideNameBlock = (
-    <h3
-      className={`${typeTokens.ceremonyName} font-[family-name:var(--font-garamond)] text-[#404A1D]`}
-    >
-      {config.brideFullName}
-    </h3>
+    <h3 className={typeTokens.ceremonyName}>{config.brideFullName}</h3>
   );
 
   return (
@@ -131,10 +123,10 @@ export function CeremonySection({
 
       <ScrollReveal
         delayMs={160}
-        className="text-center space-y-3 md:space-y-4"
+        className="text-center space-y-4 md:space-y-5"
       >
-        <p className={typeTokens.caption}>TRÂN TRỌNG BÁO TIN</p>
-        <p className={`${typeTokens.caption} tracking-[0.15em]`}>
+        <p className={typeTokens.ceremonyIntro}>TRÂN TRỌNG BÁO TIN</p>
+        <p className={`${typeTokens.ceremonyIntro} tracking-[0.15em]`}>
           LỄ THÀNH HÔN CỦA CON CHÚNG TÔI
         </p>
         {groomFirst ? (
@@ -142,7 +134,7 @@ export function CeremonySection({
             {groomNameBlock}
             <p
               className="font-[family-name:var(--font-script)] text-[#404A1D]"
-              style={{ fontSize: typeTokens.scriptAmp, lineHeight: 1.2 }}
+              style={{ fontSize: typeTokens.ceremonyAmp, lineHeight: 1.15 }}
             >
               &
             </p>
@@ -153,7 +145,7 @@ export function CeremonySection({
             {brideNameBlock}
             <p
               className="font-[family-name:var(--font-script)] text-[#404A1D]"
-              style={{ fontSize: typeTokens.scriptAmp, lineHeight: 1.2 }}
+              style={{ fontSize: typeTokens.ceremonyAmp, lineHeight: 1.15 }}
             >
               &
             </p>
