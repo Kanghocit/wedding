@@ -40,6 +40,25 @@ export type WishEntry = {
   createdAt: string;
 };
 
+export type GuestSalutation =
+  | "anh"
+  | "chi"
+  | "ong"
+  | "ba"
+  | "co"
+  | "chu"
+  | "em"
+  | "ban";
+
+export type GuestInvite = {
+  id: string;
+  slug: string;
+  name: string;
+  salutation: GuestSalutation;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export type WeddingConfig = {
   pageTitle: string;
   groomShortName: string;

@@ -32,6 +32,8 @@ export const type = {
   scriptName: "min(120px, 28vw)",
   scriptAmp: "min(100px, 20vw)",
   ceremonyIntro: `${montserrat} text-[14px] md:text-[15px] font-light tracking-[0.2em] text-[#404A1D]/85`,
+  inviteGuestName: `${garamond} text-lg md:text-xl text-[#404A1D] leading-snug`,
+  inviteAttendPhrase: `${garamond} text-[17px] md:text-[19px] text-[#404A1D]/90 leading-snug tracking-[0.04em]`,
   ceremonyName: `${script} text-[clamp(2.85rem,17vw,5rem)] md:text-[80px] leading-[1.02] font-normal text-[#404A1D]`,
   ceremonyAmp: `${script} text-[clamp(1.65rem,8vw,2.125rem)] md:text-[34px] text-[#404A1D]/75 leading-none font-normal`,
   bodyUi: montserrat,

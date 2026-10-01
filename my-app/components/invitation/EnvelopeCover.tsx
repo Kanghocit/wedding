@@ -12,6 +12,7 @@ type Props = {
   groomShort: string;
   brideShort: string;
   weddingDate: string;
+  inviteLine?: string;
   onOpenStart: () => void;
   onDismiss: () => void;
 };
@@ -20,6 +21,7 @@ export function EnvelopeCover({
   groomShort,
   brideShort,
   weddingDate,
+  inviteLine,
   onOpenStart,
   onDismiss,
 }: Props) {
@@ -141,11 +143,7 @@ export function EnvelopeCover({
         style={{ backgroundColor: colors.olive }}
         aria-hidden
       />
-      <div
-        ref={backdropBlurRef}
-        className="cover-backdrop-blur"
-        aria-hidden
-      />
+      <div ref={backdropBlurRef} className="cover-backdrop-blur" aria-hidden />
 
       <div
         data-cover-oval
@@ -220,13 +218,18 @@ export function EnvelopeCover({
               <span className="h-px flex-1 bg-gradient-to-l from-transparent via-[#C4A57455] to-[#404A1D]/25" />
             </div>
 
-            <p className={type.cover.date}>
-              {formatDisplayDate(weddingDate)}
-            </p>
+            <p className={type.cover.date}>{formatDisplayDate(weddingDate)}</p>
 
             <p className={`mt-6 tracking-[0.06em] ${type.cover.invite}`}>
-              Thân Mời
+              Trân trọng kính mời
             </p>
+            {inviteLine ? (
+              <div className="mt-3 max-w-[18rem] mx-auto space-y-2">
+                <p className={`leading-snug ${type.inviteGuestName}`}>
+                  {inviteLine}
+                </p>
+              </div>
+            ) : null}
 
             <button
               ref={openButtonRef}
@@ -241,4 +244,4 @@ export function EnvelopeCover({
       </div>
     </div>
   );
-};
+}

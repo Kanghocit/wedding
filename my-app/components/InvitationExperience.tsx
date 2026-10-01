@@ -21,6 +21,7 @@ import { MusicFab } from "./invitation/MusicFab";
 import { PhotoLightbox } from "./invitation/PhotoLightbox";
 import { RsvpModal } from "./invitation/RsvpModal";
 import { ScrollReveal } from "./invitation/ScrollReveal";
+import { ThankYouPhotoSection } from "./invitation/ThankYouPhotoSection";
 import { WeddingCountdown } from "./invitation/WeddingCountdown";
 import { useIdleAutoScroll } from "./invitation/useIdleAutoScroll";
 import { useScrollParallax } from "./invitation/useScrollParallax";
@@ -33,10 +34,17 @@ import {
 type Props = {
   config: PublicWeddingConfig;
   guestName?: string;
+  /** Personalized line e.g. "Kính mời Anh …" — bride invite links only */
+  inviteLine?: string;
   partySide?: PartySide;
 };
 
-export function InvitationExperience({ config, guestName, partySide }: Props) {
+export function InvitationExperience({
+  config,
+  guestName,
+  inviteLine,
+  partySide,
+}: Props) {
   const scrollRootRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
   const userGestureAtRef = useRef(0);
@@ -53,7 +61,7 @@ export function InvitationExperience({ config, guestName, partySide }: Props) {
   const [rsvpOpen, setRsvpOpen] = useState(false);
   const [giftOpen, setGiftOpen] = useState(false);
   const [wishes, setWishes] = useState<WishEntry[]>([]);
-  const [wishName, setWishName] = useState("");
+  const [wishName, setWishName] = useState(guestName ?? "");
   const [wishMessage, setWishMessage] = useState("");
   const [rsvpName, setRsvpName] = useState(guestName ?? "");
   const [rsvpAttending, setRsvpAttending] = useState<boolean | null>(null);
@@ -141,7 +149,10 @@ export function InvitationExperience({ config, guestName, partySide }: Props) {
   }, [loadWishes]);
 
   useEffect(() => {
-    if (guestName) setRsvpName(guestName);
+    if (guestName) {
+      setRsvpName(guestName);
+      setWishName(guestName);
+    }
   }, [guestName]);
 
   const startMusic = () => {
@@ -252,6 +263,7 @@ export function InvitationExperience({ config, guestName, partySide }: Props) {
           groomShort={config.groomShortName}
           brideShort={config.brideShortName}
           weddingDate={config.weddingDate}
+          inviteLine={partySide === "bride" ? inviteLine : undefined}
           onOpenStart={handleCoverOpenStart}
           onDismiss={handleCoverDismiss}
         />
@@ -356,13 +368,8 @@ export function InvitationExperience({ config, guestName, partySide }: Props) {
               <WeddingCountdown targetMs={ceremonyCountdownTargetMs} />
             </ScrollReveal>
 
-            <ScrollReveal
-              as="footer"
-              className={`relative flex flex-col items-center ${layout.sectionPadWide} pb-16 md:pb-20 text-center z-10`}
-            >
-              <p className={`${type.footerNote} max-w-md px-4`}>
-                {config.footerMessage}
-              </p>
+            <ScrollReveal className="relative z-10">
+              <ThankYouPhotoSection message={config.footerMessage} />
             </ScrollReveal>
           </div>
         </div>
