@@ -149,6 +149,15 @@ export function InvitationExperience({
   }, [loadWishes]);
 
   useEffect(() => {
+    document.documentElement.classList.add("invitation-viewport-lock");
+    document.body.classList.add("invitation-viewport-lock");
+    return () => {
+      document.documentElement.classList.remove("invitation-viewport-lock");
+      document.body.classList.remove("invitation-viewport-lock");
+    };
+  }, []);
+
+  useEffect(() => {
     if (guestName) {
       setRsvpName(guestName);
       setWishName(guestName);
@@ -173,9 +182,6 @@ export function InvitationExperience({
     const root = scrollRootRef.current;
     if (root) {
       root.scrollTo({ top: 0, behavior: "auto" });
-      // Một bước cuộn đồng bộ trong user gesture (Safari iOS).
-      root.scrollTop = 1;
-      root.scrollTop = 0;
     }
 
     const main = mainRef.current;
@@ -272,7 +278,7 @@ export function InvitationExperience({
       <div
         ref={scrollRootRef}
         data-invitation-scroll
-        className={`h-[100dvh] w-full overflow-y-auto overflow-x-clip overscroll-y-contain touch-pan-y bg-white scrollbar-none [-webkit-overflow-scrolling:touch] ${coverMounted ? "pointer-events-none" : ""}`}
+        className={`invitation-scroll-root overflow-x-clip overscroll-y-contain touch-pan-y bg-white scrollbar-none [-webkit-overflow-scrolling:touch] ${coverMounted ? "overflow-hidden pointer-events-none" : "overflow-y-auto"}`}
       >
         <div className="flex w-full justify-center">
           <div

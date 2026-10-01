@@ -3,7 +3,7 @@
 import { useEffect, useRef, type RefObject } from "react";
 
 const SCROLL_SPEED_PX_PER_SEC = 44;
-const START_DELAY_MS = 120;
+const START_DELAY_MS = 2200;
 const USER_LISTENER_DELAY_MS = 2800;
 const BOTTOM_THRESHOLD_PX = 40;
 const MIN_EXTRA_SCROLL_PX = 160;

@@ -274,6 +274,22 @@ body {
   -webkit-backdrop-filter: blur(5px);
 }
 
+html.invitation-viewport-lock,
+body.invitation-viewport-lock {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+.invitation-scroll-root {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  height: 100dvh;
+  max-height: 100dvh;
+  width: 100%;
+}
+
 .invitation-hero-reveal {
   opacity: 0.88;
   transform: scale(1.02);

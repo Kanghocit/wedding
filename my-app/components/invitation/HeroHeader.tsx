@@ -8,7 +8,7 @@ type Props = {
 
 export function HeroHeader({ groomShort, brideShort }: Props) {
   return (
-    <header className="relative flex w-full justify-center min-h-[100dvh] md:min-h-0 pt-12 pb-8 md:pt-24 md:pb-12">
+    <header className="relative flex w-full justify-center min-h-0 max-h-[100dvh] md:max-h-none pt-10 pb-6 md:pt-24 md:pb-12">
       <div className="relative mx-auto flex w-full max-w-[480px] flex-col justify-end md:justify-start md:w-[70%] md:max-w-none md:ml-[1vw] md:mr-0 px-3 md:px-0">
         <div className="relative mx-auto w-[min(92%,21rem)] md:w-full">
           <Image
