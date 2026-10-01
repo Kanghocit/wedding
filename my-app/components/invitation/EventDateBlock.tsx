@@ -1,5 +1,6 @@
 import { type } from "@/lib/theme";
 import { DateDisplay } from "./DateDisplay";
+import { ScrollReveal } from "./ScrollReveal";
 
 type Props = {
   subtitle?: string;
@@ -9,6 +10,9 @@ type Props = {
   place: string;
   address: string;
   className?: string;
+  /** Base delay for first line (ms), each following line + lineStepMs */
+  revealStartDelayMs?: number;
+  lineStepMs?: number;
 };
 
 export function EventDateBlock({
@@ -19,21 +23,40 @@ export function EventDateBlock({
   place,
   address,
   className = "",
+  revealStartDelayMs = 0,
+  lineStepMs = 90,
 }: Props) {
+  let step = 0;
+  const delay = () => revealStartDelayMs + step++ * lineStepMs;
+
   return (
     <div className={`space-y-3 md:space-y-4 ${className}`}>
       {subtitle ? (
-        <p className={`${type.caption} tracking-[0.12em] px-2`}>{subtitle}</p>
+        <ScrollReveal as="p" delayMs={delay()} className={`${type.caption} tracking-[0.12em] px-2`}>
+          {subtitle}
+        </ScrollReveal>
       ) : null}
-      <p
+      <ScrollReveal
+        as="p"
+        delayMs={delay()}
         className={`${type.sectionSubheading} normal-case tracking-[0.12em] whitespace-pre-line leading-relaxed`}
       >
         {title}
-      </p>
-      <DateDisplay isoDate={isoDate} time={time} />
+      </ScrollReveal>
+      <ScrollReveal delayMs={delay()}>
+        <DateDisplay isoDate={isoDate} time={time} />
+      </ScrollReveal>
       <div className={`${type.bodySerif} space-y-1 px-2`}>
-        <p className="tracking-[0.08em]">{place}</p>
-        <p className={`leading-relaxed ${type.addressSerif}`}>{address}</p>
+        <ScrollReveal as="p" delayMs={delay()} className="tracking-[0.08em]">
+          {place}
+        </ScrollReveal>
+        <ScrollReveal
+          as="p"
+          delayMs={delay()}
+          className={`leading-relaxed ${type.addressSerif}`}
+        >
+          {address}
+        </ScrollReveal>
       </div>
     </div>
   );

@@ -9,6 +9,7 @@ import { headingClassName, type as typeTokens } from "@/lib/theme";
 import type { PartySide } from "./PartyVenuesSection";
 import { EventDateBlock } from "./EventDateBlock";
 import { ScrollReveal } from "./ScrollReveal";
+import { ScrollRevealLines } from "./ScrollRevealLines";
 
 type Props = Pick<
   PublicWeddingConfig,
@@ -100,73 +101,87 @@ export function CeremonySection({
     />
   );
 
-  const coupleStagger = (
-    <div className="ceremony-couple-stagger" aria-label="Tên chú rể và cô dâu">
-      <h3
-        className={`ceremony-couple-stagger__name ceremony-couple-stagger__name--start ${typeTokens.ceremonyName}`}
-      >
-        {groomFirst ? config.groomFullName : config.brideFullName}
-      </h3>
-      <p className={`ceremony-couple-stagger__amp ${typeTokens.ceremonyAmp}`}>
-        &
-      </p>
-      <h3
-        className={`ceremony-couple-stagger__name ceremony-couple-stagger__name--end ${typeTokens.ceremonyName}`}
-      >
-        {groomFirst ? config.brideFullName : config.groomFullName}
-      </h3>
-    </div>
-  );
-
   return (
     <>
       <ScrollReveal as="h2" className={headingClassName()}>
         THÔNG TIN LỄ CƯỚI
       </ScrollReveal>
 
-      <ScrollReveal
-        delayMs={80}
-        className={`ceremony-families-row ${typeTokens.bodySerif}`}
-      >
-        {groomFirst ? groomFamily : brideFamily}
-        {groomFirst ? brideFamily : groomFamily}
-      </ScrollReveal>
+      <div className={`ceremony-families-row ${typeTokens.bodySerif}`}>
+        <ScrollReveal variant="left" delayMs={80}>
+          {groomFirst ? groomFamily : brideFamily}
+        </ScrollReveal>
+        <ScrollReveal variant="right" delayMs={160}>
+          {groomFirst ? brideFamily : groomFamily}
+        </ScrollReveal>
+      </div>
 
-      <ScrollReveal delayMs={160} className="text-center">
-        <div className="space-y-3 md:space-y-3.5">
-          <p className={typeTokens.ceremonyIntro}>TRÂN TRỌNG BÁO TIN</p>
-          <p className={`${typeTokens.ceremonyIntro} tracking-[0.15em]`}>
-            LỄ THÀNH HÔN CỦA CON CHÚNG TÔI
-          </p>
+      <div className="text-center">
+        <ScrollRevealLines
+          className="space-y-3 md:space-y-3.5"
+          startDelayMs={200}
+          stepMs={110}
+          lines={[
+            {
+              node: "TRÂN TRỌNG BÁO TIN",
+              className: typeTokens.ceremonyIntro,
+            },
+            {
+              node: "LỄ THÀNH HÔN CỦA CON CHÚNG TÔI",
+              className: `${typeTokens.ceremonyIntro} tracking-[0.15em]`,
+            },
+          ]}
+        />
+        <div className="ceremony-couple-stagger" aria-label="Tên chú rể và cô dâu">
+          <ScrollReveal
+            as="h3"
+            delayMs={420}
+            className={`ceremony-couple-stagger__name ceremony-couple-stagger__name--start ${typeTokens.ceremonyName}`}
+          >
+            {groomFirst ? config.groomFullName : config.brideFullName}
+          </ScrollReveal>
+          <ScrollReveal
+            as="p"
+            delayMs={520}
+            className={`ceremony-couple-stagger__amp ${typeTokens.ceremonyAmp}`}
+          >
+            &
+          </ScrollReveal>
+          <ScrollReveal
+            as="h3"
+            delayMs={620}
+            className={`ceremony-couple-stagger__name ceremony-couple-stagger__name--end ${typeTokens.ceremonyName}`}
+          >
+            {groomFirst ? config.brideFullName : config.groomFullName}
+          </ScrollReveal>
         </div>
-        {coupleStagger}
-      </ScrollReveal>
+      </div>
 
       {preEvent ? (
-        <ScrollReveal delayMs={240}>
-          <EventDateBlock
-            subtitle={preEvent.subtitle}
-            title={preEvent.title}
-            isoDate={preEvent.date}
-            time={preEvent.time}
-            place={preEvent.place}
-            address={preEvent.address}
-            className="pt-0 text-center"
-          />
-        </ScrollReveal>
+        <EventDateBlock
+          subtitle={preEvent.subtitle}
+          title={preEvent.title}
+          isoDate={preEvent.date}
+          time={preEvent.time}
+          place={preEvent.place}
+          address={preEvent.address}
+          className="pt-0 text-center"
+          revealStartDelayMs={720}
+          lineStepMs={95}
+        />
       ) : null}
 
-      <ScrollReveal delayMs={preEvent ? 320 : 240}>
-        <EventDateBlock
-          subtitle={undefined}
-          title={config.ceremonyHeader}
-          isoDate={config.weddingDate}
-          time={ceremonyTime}
-          place={config.ceremonyPlace}
-          address={ceremonyAddress}
-          className={`text-center ${preEvent ? "pt-4 md:pt-6" : "pt-4"}`}
-        />
-      </ScrollReveal>
+      <EventDateBlock
+        subtitle={undefined}
+        title={config.ceremonyHeader}
+        isoDate={config.weddingDate}
+        time={ceremonyTime}
+        place={config.ceremonyPlace}
+        address={ceremonyAddress}
+        className={`text-center ${preEvent ? "pt-4 md:pt-6" : "pt-4"}`}
+        revealStartDelayMs={preEvent ? 1280 : 720}
+        lineStepMs={95}
+      />
 
       <ScrollReveal
         delayMs={preEvent ? 400 : 320}

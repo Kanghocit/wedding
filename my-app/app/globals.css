@@ -314,16 +314,24 @@ body.invitation-viewport-lock {
 
 [data-scroll-reveal] {
   opacity: 0;
-  transform: translateY(1.25rem);
+  transform: translateY(1.35rem);
   transition:
-    opacity 0.65s ease,
-    transform 0.65s ease;
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: opacity, transform;
+}
+
+[data-scroll-reveal][data-scroll-reveal-variant="left"] {
+  transform: translateX(-2.25rem) translateY(0.35rem);
+}
+
+[data-scroll-reveal][data-scroll-reveal-variant="right"] {
+  transform: translateX(2.25rem) translateY(0.35rem);
 }
 
 [data-scroll-reveal].is-visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) translateX(0);
 }
 
 @media (prefers-reduced-motion: reduce) {
