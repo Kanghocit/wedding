@@ -278,7 +278,7 @@ export function InvitationExperience({
       <div
         ref={scrollRootRef}
         data-invitation-scroll
-        className={`invitation-scroll-root overflow-x-clip overscroll-y-contain touch-pan-y bg-white scrollbar-none [-webkit-overflow-scrolling:touch] ${coverMounted ? "overflow-hidden pointer-events-none" : "overflow-y-auto"}`}
+        className={`invitation-scroll-root overflow-x-clip overscroll-y-contain touch-pan-y scrollbar-none [-webkit-overflow-scrolling:touch] ${coverMounted ? "overflow-hidden pointer-events-none bg-[#404A1D]" : "overflow-y-auto bg-white"}`}
       >
         <div className="flex w-full justify-center">
           <div

@@ -135,11 +135,12 @@ export function EnvelopeCover({
   return (
     <div
       ref={rootRef}
-      className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden px-4"
+      className="envelope-cover-root flex items-center justify-center overflow-hidden px-4"
+      style={{ backgroundColor: colors.olive }}
     >
       <div
         ref={backdropRef}
-        className="pointer-events-none absolute inset-0"
+        className="pointer-events-none absolute inset-0 -bottom-[max(1rem,env(safe-area-inset-bottom))]"
         style={{ backgroundColor: colors.olive }}
         aria-hidden
       />
