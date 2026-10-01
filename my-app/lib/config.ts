@@ -1,3 +1,4 @@
+import { defaultGalleryUrlsList } from "./gallery-images";
 import type {
   BankAccount,
   PreEventInfo,
@@ -160,13 +161,11 @@ export function getWeddingConfig(): WeddingConfig {
     ),
     musicUrl: env("MUSIC_URL", "/music/le-duong.mp3"),
     adminPassword: env("ADMIN_PASSWORD", "changeme"),
-    galleryUrls: splitList(
-      env(
-        "GALLERY_URLS",
-        "https://assets.chungdoi.com/photo-library/design/868ddb966956a9be3daceb4c5069c63402923a0db8fa90efda87fa0ddc8d417c.webp,https://assets.chungdoi.com/photo-library/design/f4d501ac194bc87673a0260b53672083714f26a6807acdd15a0819cc80df2c3f.webp,https://assets.chungdoi.com/photo-library/design/96a6b4bc3f9ba466dfcdd56b966b708dc43ea3e1743e7922185d6024a36cdef5.webp,https://assets.chungdoi.com/photo-library/design/932d1cc8e900f348e154b162746ab5aef56c93670464ca81b4c93f1e53bb87fa.webp,https://assets.chungdoi.com/photo-library/design/e675b91cf8fa3f9a97fe0dcc10cc51e61bdfd8491cbf9813e0dbe43413921993.webp,https://assets.chungdoi.com/photo-library/design/b9a8c9056bad5f8b1d62e0a86b2b1a97d6a5f14c70f7c1c3c4ad9c99edcda787.webp,https://assets.chungdoi.com/photo-library/design/a7d86e0a5cb47687efe046d667e6eedc0bce793c6d7a59f8c9385393bf30aa2a.webp,https://assets.chungdoi.com/photo-library/design/65cc988c7cef94f66d9b5fff4cd1f92333d2b5c08acdd9c10e1cc7b5cd513620.webp,https://assets.chungdoi.com/photo-library/design/5aceecdb76ac0b4e2d0b2a41a26a760cb29676a3edec0b5e79e688d2d9991f06.webp",
-      ),
-      ",",
-    ),
+    galleryUrls: (() => {
+      const raw = env("GALLERY_URLS", "");
+      if (!raw) return defaultGalleryUrlsList();
+      return splitList(raw, ",");
+    })(),
     dressColors: splitList(env("DRESS_COLORS", "#3a332c,#b9a48a,#f6f1e8"), ","),
     timeline: parseTimeline(
       env(
