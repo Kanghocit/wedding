@@ -4,6 +4,7 @@ import { gsap } from "gsap";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { headingClassName, type } from "@/lib/theme";
+import { scrollRevealDelay } from "@/lib/scroll-reveal-timing";
 import { ScrollReveal } from "./ScrollReveal";
 
 type Props = {
@@ -131,7 +132,7 @@ export function GiftEnvelopes({ onOpen }: Props) {
       <ScrollReveal as="h2" className={`${headingClassName()} mb-8 md:mb-10 relative z-10`}>
         HỘP QUÀ MỪNG
       </ScrollReveal>
-      <ScrollReveal delayMs={100}>
+      <ScrollReveal delayMs={scrollRevealDelay(1)}>
       <button
         type="button"
         aria-label="Mở hộp mừng cưới"

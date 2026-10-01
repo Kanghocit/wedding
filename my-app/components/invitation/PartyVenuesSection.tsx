@@ -2,6 +2,7 @@
 
 import { mapsDirectionsUrl, mapsEmbedUrl } from "@/lib/date-utils";
 import { headingClassName, layout, type } from "@/lib/theme";
+import { scrollRevealDelay } from "@/lib/scroll-reveal-timing";
 import { ScrollReveal } from "./ScrollReveal";
 
 export type PartySide = "groom" | "bride";
@@ -75,7 +76,7 @@ export function PartyVenuesSection({ groom, bride, partySide }: Props) {
       </ScrollReveal>
 
       {venues.map((venue, index) => (
-        <ScrollReveal key={venue.label} delayMs={80 + index * 120}>
+        <ScrollReveal key={venue.label} delayMs={scrollRevealDelay(index + 1)}>
           <VenueBlock {...venue} />
         </ScrollReveal>
       ))}

@@ -18,7 +18,9 @@ export function ScrollReveal({
   as: Tag = "div",
 }: Props) {
   const style: CSSProperties | undefined =
-    delayMs > 0 ? { transitionDelay: `${delayMs}ms` } : undefined;
+    delayMs > 0
+      ? ({ ["--scroll-reveal-delay" as string]: `${delayMs}ms` } as CSSProperties)
+      : undefined;
 
   return (
     <Tag

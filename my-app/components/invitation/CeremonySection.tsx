@@ -5,6 +5,11 @@ import {
 } from "@/lib/date-utils";
 import type { PublicWeddingConfig } from "@/lib/config";
 import type { PreEventInfo } from "@/lib/types";
+import {
+  eventDateBlockLineCount,
+  scrollRevealDelay,
+  SCROLL_REVEAL_STAGGER_MS,
+} from "@/lib/scroll-reveal-timing";
 import { headingClassName, type as typeTokens } from "@/lib/theme";
 import type { PartySide } from "./PartyVenuesSection";
 import { EventDateBlock } from "./EventDateBlock";
@@ -101,6 +106,16 @@ export function CeremonySection({
     />
   );
 
+  const d = scrollRevealDelay;
+  let ceremonyStep = 8;
+  const preEventRevealStart = ceremonyStep;
+  if (preEvent) {
+    ceremonyStep += eventDateBlockLineCount(true);
+  }
+  const mainEventRevealStart = ceremonyStep;
+  ceremonyStep += eventDateBlockLineCount(false);
+  const calendarRevealStart = ceremonyStep;
+
   return (
     <>
       <ScrollReveal as="h2" className={headingClassName()}>
@@ -108,10 +123,10 @@ export function CeremonySection({
       </ScrollReveal>
 
       <div className={`ceremony-families-row ${typeTokens.bodySerif}`}>
-        <ScrollReveal variant="left" delayMs={80}>
+        <ScrollReveal variant="left" delayMs={d(1)}>
           {groomFirst ? groomFamily : brideFamily}
         </ScrollReveal>
-        <ScrollReveal variant="right" delayMs={160}>
+        <ScrollReveal variant="right" delayMs={d(2)}>
           {groomFirst ? brideFamily : groomFamily}
         </ScrollReveal>
       </div>
@@ -119,8 +134,8 @@ export function CeremonySection({
       <div className="text-center">
         <ScrollRevealLines
           className="space-y-3 md:space-y-3.5"
-          startDelayMs={200}
-          stepMs={110}
+          startDelayMs={d(3)}
+          stepMs={SCROLL_REVEAL_STAGGER_MS}
           lines={[
             {
               node: "TRÂN TRỌNG BÁO TIN",
@@ -135,21 +150,21 @@ export function CeremonySection({
         <div className="ceremony-couple-stagger" aria-label="Tên chú rể và cô dâu">
           <ScrollReveal
             as="h3"
-            delayMs={420}
+            delayMs={d(5)}
             className={`ceremony-couple-stagger__name ceremony-couple-stagger__name--start ${typeTokens.ceremonyName}`}
           >
             {groomFirst ? config.groomFullName : config.brideFullName}
           </ScrollReveal>
           <ScrollReveal
             as="p"
-            delayMs={520}
+            delayMs={d(6)}
             className={`ceremony-couple-stagger__amp ${typeTokens.ceremonyAmp}`}
           >
             &
           </ScrollReveal>
           <ScrollReveal
             as="h3"
-            delayMs={620}
+            delayMs={d(7)}
             className={`ceremony-couple-stagger__name ceremony-couple-stagger__name--end ${typeTokens.ceremonyName}`}
           >
             {groomFirst ? config.brideFullName : config.groomFullName}
@@ -166,8 +181,7 @@ export function CeremonySection({
           place={preEvent.place}
           address={preEvent.address}
           className="pt-0 text-center"
-          revealStartDelayMs={720}
-          lineStepMs={95}
+          revealStartDelayMs={d(preEventRevealStart)}
         />
       ) : null}
 
@@ -179,12 +193,11 @@ export function CeremonySection({
         place={config.ceremonyPlace}
         address={ceremonyAddress}
         className={`text-center ${preEvent ? "pt-4 md:pt-6" : "pt-4"}`}
-        revealStartDelayMs={preEvent ? 1280 : 720}
-        lineStepMs={95}
+        revealStartDelayMs={d(mainEventRevealStart)}
       />
 
       <ScrollReveal
-        delayMs={preEvent ? 400 : 320}
+        delayMs={d(calendarRevealStart)}
         className="mx-auto max-w-[280px] md:max-w-xs pt-6 md:pt-8 text-center"
       >
         <p className={`${typeTokens.caption} mb-3 opacity-80`}>

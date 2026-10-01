@@ -2,6 +2,7 @@
 
 import type { WishEntry } from "@/lib/types";
 import { headingClassName, type } from "@/lib/theme";
+import { scrollRevealDelay } from "@/lib/scroll-reveal-timing";
 import { ScrollReveal } from "./ScrollReveal";
 
 type Props = {
@@ -36,7 +37,7 @@ export function GuestbookSection({
       </ScrollReveal>
 
       <div className="mx-auto max-w-full md:max-w-[560px]">
-        <ScrollReveal delayMs={80} className="rounded-[1.25rem] bg-white px-5 py-5 md:px-6 md:py-6 shadow-[0_10px_40px_rgba(64,74,29,0.1)]">
+        <ScrollReveal delayMs={scrollRevealDelay(1)} className="rounded-[1.25rem] bg-white px-5 py-5 md:px-6 md:py-6 shadow-[0_10px_40px_rgba(64,74,29,0.1)]">
           <div className="space-y-3 md:space-y-4">
             <input
               required
@@ -76,7 +77,7 @@ export function GuestbookSection({
         </ScrollReveal>
 
         <ScrollReveal
-          delayMs={160}
+          delayMs={scrollRevealDelay(2)}
           className="mt-8 max-h-[500px] space-y-3 overflow-y-auto pr-1 scrollbar-thin"
         >
           {wishes.map((w) => (

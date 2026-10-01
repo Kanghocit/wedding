@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { SCROLL_REVEAL_STAGGER_MS } from "@/lib/scroll-reveal-timing";
 import { ScrollReveal } from "./ScrollReveal";
 
 type Line = {
@@ -18,7 +19,7 @@ export function ScrollRevealLines({
   lines,
   className = "",
   startDelayMs = 0,
-  stepMs = 100,
+  stepMs = SCROLL_REVEAL_STAGGER_MS,
 }: Props) {
   return (
     <div className={className}>

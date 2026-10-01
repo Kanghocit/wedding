@@ -1,3 +1,4 @@
+import { SCROLL_REVEAL_STAGGER_MS } from "@/lib/scroll-reveal-timing";
 import { type } from "@/lib/theme";
 import { DateDisplay } from "./DateDisplay";
 import { ScrollReveal } from "./ScrollReveal";
@@ -24,7 +25,7 @@ export function EventDateBlock({
   address,
   className = "",
   revealStartDelayMs = 0,
-  lineStepMs = 90,
+  lineStepMs = SCROLL_REVEAL_STAGGER_MS,
 }: Props) {
   let step = 0;
   const delay = () => revealStartDelayMs + step++ * lineStepMs;
