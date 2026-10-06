@@ -31,10 +31,10 @@ const montserrat = Montserrat({
   variable: "--font-montserrat",
 });
 
-/** Compressed from img-main (~200KB) — Zalo/FB crawlers reject the 13MB original. */
-const OG_IMAGE_PATH = "/images/og-preview.jpg";
-const OG_IMAGE_WIDTH = 800;
-const OG_IMAGE_HEIGHT = 1200;
+/** Manual OG art — public/images/og-preview.jpg (1200×630). */
+const OG_IMAGE_PATH = "/images/og-preview.jpg?v=3";
+const OG_IMAGE_WIDTH = 1200;
+const OG_IMAGE_HEIGHT = 630;
 
 function siteMetadataBase(): URL {
   const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim();
