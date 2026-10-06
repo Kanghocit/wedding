@@ -32,7 +32,7 @@ const montserrat = Montserrat({
 });
 
 /** Manual OG art — public/images/og-preview.jpg (1200×630). */
-const OG_IMAGE_PATH = "/images/og-preview.jpg?v=3";
+const OG_IMAGE_PATH = "/images/og-preview.jpg?v=4";
 const OG_IMAGE_WIDTH = 1200;
 const OG_IMAGE_HEIGHT = 630;
 
