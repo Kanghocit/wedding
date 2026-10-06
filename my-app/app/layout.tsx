@@ -31,11 +31,38 @@ const montserrat = Montserrat({
   variable: "--font-montserrat",
 });
 
+const OG_IMAGE_PATH = "/images/img-main.JPG";
+
+function siteMetadataBase(): URL {
+  const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  const base = raw ? raw.replace(/\/$/, "") : "https://ducanhphamhuyen.love";
+  return new URL(`${base}/`);
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   const { pageTitle } = getWeddingConfig();
   return {
+    metadataBase: siteMetadataBase(),
     title: pageTitle,
     description: pageTitle,
+    openGraph: {
+      title: pageTitle,
+      description: pageTitle,
+      type: "website",
+      locale: "vi_VN",
+      images: [
+        {
+          url: OG_IMAGE_PATH,
+          alt: pageTitle,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: pageTitle,
+      description: pageTitle,
+      images: [OG_IMAGE_PATH],
+    },
   };
 }
 
