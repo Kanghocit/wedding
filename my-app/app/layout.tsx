@@ -31,7 +31,10 @@ const montserrat = Montserrat({
   variable: "--font-montserrat",
 });
 
-const OG_IMAGE_PATH = "/images/img-main.JPG";
+/** Compressed from img-main (~200KB) — Zalo/FB crawlers reject the 13MB original. */
+const OG_IMAGE_PATH = "/images/og-preview.jpg";
+const OG_IMAGE_WIDTH = 800;
+const OG_IMAGE_HEIGHT = 1200;
 
 function siteMetadataBase(): URL {
   const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim();
@@ -50,9 +53,13 @@ export async function generateMetadata(): Promise<Metadata> {
       description: pageTitle,
       type: "website",
       locale: "vi_VN",
+      url: siteMetadataBase(),
       images: [
         {
           url: OG_IMAGE_PATH,
+          width: OG_IMAGE_WIDTH,
+          height: OG_IMAGE_HEIGHT,
+          type: "image/jpeg",
           alt: pageTitle,
         },
       ],
